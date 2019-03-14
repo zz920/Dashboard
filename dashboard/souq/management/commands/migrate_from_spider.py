@@ -13,24 +13,24 @@ class Command(BaseCommand):
         parser.add_argument('mongo_db_uri', type=str, default='mongodb://localhost:43815')
         parser.add_argument('mongo_db_name', type=str, default='souq')
 
-    def cache_get(self, obj, **options):
+    def cache_get(self, obj, query=True, **options):
         cache_name = 'cache' + repr(obj)
         if not hasattr(self, cache_name):
             setattr(self, cache_name, {})
         cache = getattr(self, cache_name)
 
         key = repr({**options})
-        if key not in cache:
+        if key not in cache and query:
             try:
                 cache[key] = obj.objects.get(**options)
             except obj.DoesNotExist:
                 pass
         return cache.get(key)
 
-    def get_or_create(self, obj, defaults={}, **options):
+    def get_or_create(self, obj, defaults={}, query=True, **options):
         options = self.clean_arabic(options)
         defaults.update(**options)
-        _obj = self.cache_get(obj, **options)
+        _obj = self.cache_get(obj, query=query, **options)
         if not _obj:
             _obj = obj(**defaults)
             _obj.save()
@@ -61,6 +61,13 @@ class Command(BaseCommand):
 
         count = 0
         item_collection = source['Souqitem']
+        # initial the cache
+        self.cache_get(SouqItem, trace_id="test")
+        item_cache = getattr(self, 'cache' + repr(SouqItem))
+        for it in SouqItem.objects.all():
+            item_cache[repr({'trace_id': it.trace_id})] = it
+
+        data = {}
         for it in item_collection.find():
             count += 1
             if count % 10000 == 0:
@@ -72,17 +79,18 @@ class Command(BaseCommand):
                 defaults={'name': it['seller']}
             )
             category = it['category'] or 'default'
-            item = self.get_or_create(
-                SouqItem,
-                trace_id=it['trace_id'],
-                defaults={
-                    'name': it['name'],
-                    'link': self.clean_url(it['link']),
-                    'description': it['description'],
-                    'seller': seller,
-                    'category': category.lower(),
-                }
-            )
+
+            trace_id = it['trace_id']
+            if trace_id not in item_cache:
+                data[trace_id] = SouqItem(
+                    trace_id=trace_id,
+                    name=it['name'],
+                    link=self.clean_url(it['link']),
+                    description=it['description'],
+                    seller=seller,
+                    category=category.lower(),
+                )
+        SouqItem.objects.bulk_create(list(data.values()))
 
         # to avoid dup detail created
         for it in SouqItem.objects.all():
