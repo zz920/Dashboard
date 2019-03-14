@@ -64,7 +64,7 @@ class Command(BaseCommand):
         seller_cache = {sr.link: '' for sr in Seller.objects.all()}
         seller_data = []
 
-        for seller in item_collection.aggregate([{'_id': {"link": "$seller_link"}, "name": {'$first': "$seller"}}]):
+        for seller in item_collection.aggregate([{'$group': {'_id': {"link": "$seller_link"}, "name": {'$first': "$seller"}}}]):
             if seller['link'] not in seller_cache:
                 seller_data.append(Seller(link=seller['link'], name=seller['name']))
             if len(seller_data) > 998:
@@ -81,9 +81,9 @@ class Command(BaseCommand):
         item_cache = {it.trace_id: '' for it in SouqItem.objects.all()}
         item_data = []
 
-        for item in item_collection.aggregate([{'_id': {"trace_id": "$trace_id"}, "name": {'$first': "$name"},
+        for item in item_collection.aggregate([{'$group':{'_id': {"trace_id": "$trace_id"}, "name": {'$first': "$name"},
             "link": {"$first": "$link"}, "description": {"$first": "$description"},
-                "seller": {"$first": "$seller_link"}, "category": {"$first": "$category"}}]):
+                "seller": {"$first": "$seller_link"}, "category": {"$first": "$category"}}}]):
             category = item['category'] or 'default'
             if item['trace_id'] not in item_cache:
                 item_data.append(SouqItem(trace_id=item['trace_id'], name=item['name'], link=self.clean_url(item['link']),
