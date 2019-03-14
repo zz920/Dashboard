@@ -13,6 +13,28 @@ class Command(BaseCommand):
         parser.add_argument('mongo_db_uri', type=str, default='mongodb://localhost:43815')
         parser.add_argument('mongo_db_name', type=str, default='souq')
 
+    def cache_get(self, obj, **options):
+        cache_name = 'cache' + repr(obj)
+        if not hasattr(self, cache_name):
+            setattr(self, cache_name, {})
+        cache = getattr(self, cache_name)
+
+        key = repr({**options})
+        if key not in cache:
+            try:
+                cache[key] = obj.get(**options)
+            except obj.DoesNotExist:
+                pass
+        return cache.get(key)
+
+    def get_or_create(self, obj, defaults={}, **options):
+        _obj = self.cache_get(obj, **options)
+        if not _obj:
+            defaults.update(**options)
+            _obj = obj(**defaults)
+            _obj.save()
+        return self.cache_get(obj, **options)
+
     def handle(self, *args, **options):
         source = pymongo.MongoClient(options['mongo_db_uri'])[options['mongo_db_name']]
 
@@ -20,23 +42,30 @@ class Command(BaseCommand):
         category_collection = source['Category']
         count = 0
         for cg in category_collection.find():
-            Category.objects.update_or_create(
-                link=self.clean_url(cg['link']),
-                defaults={'name': cg['name'].lower(), 'classification': cg['parent']}
-            )
             count += 1
             if count % 1000 == 0: print('Updated {} category'.format(count))
 
+            name = cg['name'].lower()
+            obj = self.get_or_create(Category, name=name, defaults={
+                'link': self.clean_url(cg['link']),
+                'classification': cg['parent']
+            })
 
         count = 0
         item_collection = source['Souqitem']
         for it in item_collection.find():
-            seller, _ = Seller.objects.get_or_create(
+            count += 1
+            if count % 10000 == 0:
+                print('Updated {} item'.format(count))
+
+            seller = self.get_or_create(
+                Seller,
                 link=self.clean_url(it['seller_link']),
                 defaults={'name': it['seller']}
             )
-            category = Category.objects.get(name=it['category'].lower())
-            item, _ = SouqItem.objects.get_or_create(
+            category = self.cache_get(Category, name=it['category'].lower())
+            item = self.cache_get(
+                SouqItem,
                 trace_id=it['trace_id'],
                 defaults={
                     'name': it['name'],
@@ -46,18 +75,16 @@ class Command(BaseCommand):
                     'category': category,
                 }
             )
-            Detail.objects.get_or_create(
-                uid=str(it['_id']),
-                defaults={
-                    'time':it['create_at'],
-                    'price': it['price'],
-                    'quantity': it['quantity'],
-                    'item': item,
-                }
-            )
-            count += 1
-            if count % 10000 == 0: print('Updated {} item'.format(count))
-
+            try:
+                Detail(
+                    uid=str(it['_id']),
+                    time=it['create_at'],
+                    price=it['price'],
+                    quantity=it['quantity'],
+                    item=item,
+                ).save()
+            except:
+                pass
 
     def clean_url(self, url):
         while url.startswith('/'):
