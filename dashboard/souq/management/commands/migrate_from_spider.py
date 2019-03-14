@@ -64,7 +64,7 @@ class Command(BaseCommand):
                 defaults={'name': it['seller']}
             )
             category = self.cache_get(Category, name=it['category'].lower())
-            item = self.cache_get(
+            item = self.get_or_create(
                 SouqItem,
                 trace_id=it['trace_id'],
                 defaults={
