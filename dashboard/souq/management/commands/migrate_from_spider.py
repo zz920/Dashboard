@@ -28,12 +28,19 @@ class Command(BaseCommand):
         return cache.get(key)
 
     def get_or_create(self, obj, defaults={}, **options):
+        options = self.clean_arabic(options)
+        defaults.update(**options)
         _obj = self.cache_get(obj, **options)
         if not _obj:
-            defaults.update(**options)
             _obj = obj(**defaults)
             _obj.save()
         return self.cache_get(obj, **options)
+
+
+    def clean_arabic(self, data):
+        if isinstance(data, dict):
+            for k, v in data.items():
+                data[k] = v.encode('utf-8', 'ignore').decode('utf-8')
 
     def handle(self, *args, **options):
         source = pymongo.MongoClient(options['mongo_db_uri'])[options['mongo_db_name']]
@@ -61,7 +68,7 @@ class Command(BaseCommand):
             seller = self.get_or_create(
                 Seller,
                 link=self.clean_url(it['seller_link']),
-                defaults={'name': it['seller'].encode('utf-8', 'ignore').decode('utf-8')}
+                defaults={'name': it['seller']}
             )
             category = self.cache_get(Category, name=it['category'].lower())
             item = self.get_or_create(
