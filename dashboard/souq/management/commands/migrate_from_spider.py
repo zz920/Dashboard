@@ -74,7 +74,6 @@ class Command(BaseCommand):
                 link=self.clean_url(it['seller_link']),
                 defaults={'name': it['seller']}
             )
-            category = self.cache_get(Category, name=it['category'].lower())
             item = self.get_or_create(
                 SouqItem,
                 trace_id=it['trace_id'],
@@ -83,7 +82,7 @@ class Command(BaseCommand):
                     'link': self.clean_url(it['link']),
                     'description': it['description'],
                     'seller': seller,
-                    'category': category,
+                    'category': it['category'].lower(),
                 }
             )
             try:

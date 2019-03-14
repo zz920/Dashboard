@@ -12,4 +12,5 @@ class SouqItem(models.Model):
     description = models.CharField(max_length=3000)
 
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    # category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.CharField(max_length=100)
