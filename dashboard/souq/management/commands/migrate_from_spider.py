@@ -61,7 +61,7 @@ class Command(BaseCommand):
             seller = self.get_or_create(
                 Seller,
                 link=self.clean_url(it['seller_link']),
-                defaults={'name': it['seller']}
+                defaults={'name': it['seller'].encode('utf-8', 'ignore').decode('utf-8')}
             )
             category = self.cache_get(Category, name=it['category'].lower())
             item = self.get_or_create(
