@@ -25,9 +25,6 @@ class Command(BaseCommand):
                 cache[key] = obj.objects.get(**options)
             except obj.DoesNotExist:
                 pass
-            except:
-                import ipdb; ipdb.set_trace()
-                pass
         return cache.get(key)
 
     def get_or_create(self, obj, defaults={}, **options):
@@ -86,16 +83,25 @@ class Command(BaseCommand):
                     'category': category.lower(),
                 }
             )
-            try:
-                Detail(
-                    uid=str(it['_id']),
-                    time=it['create_at'],
-                    price=it['price'],
-                    quantity=it['quantity'],
-                    item=item,
-                ).save()
-            except:
-                pass
+
+        # to avoid dup detail created
+        for it in SouqItem.objects.all():
+            details = {d.uid: d for d in it.detail_set.all()}
+            data = []
+            for _it in item_collection.find({'trace_id': it.trace_id}):
+                if _it['_id'] in details:
+                    continue
+                data.append(
+                    Detail(
+                        uid=str(_it['_id']),
+                        time=_it['create_at'],
+                        price=_it['price'],
+                        quantity=_it['quantity'],
+                        item=it
+                    )
+                )
+            Detail.objects.bulk_create(data)
+            print('Updated {} details'.format(len(data)))
 
     def clean_url(self, url):
         while url.startswith('/'):
