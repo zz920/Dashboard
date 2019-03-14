@@ -41,6 +41,7 @@ class Command(BaseCommand):
         if isinstance(data, dict):
             for k, v in data.items():
                 data[k] = v.encode('utf-8', 'ignore').decode('utf-8')
+        return data
 
     def handle(self, *args, **options):
         source = pymongo.MongoClient(options['mongo_db_uri'])[options['mongo_db_name']]
