@@ -22,7 +22,7 @@ class Command(BaseCommand):
         key = repr({**options})
         if key not in cache:
             try:
-                cache[key] = obj.get(**options)
+                cache[key] = obj.objects.get(**options)
             except obj.DoesNotExist:
                 pass
         return cache.get(key)
