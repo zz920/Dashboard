@@ -25,6 +25,9 @@ class Command(BaseCommand):
                 cache[key] = obj.objects.get(**options)
             except obj.DoesNotExist:
                 pass
+            except:
+                import ipdb; ipdb.set_trace()
+                pass
         return cache.get(key)
 
     def get_or_create(self, obj, defaults={}, **options):
