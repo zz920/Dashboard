@@ -13,34 +13,11 @@ class Command(BaseCommand):
         parser.add_argument('mongo_db_uri', type=str, default='mongodb://localhost:43815')
         parser.add_argument('mongo_db_name', type=str, default='souq')
 
-    def cache_get(self, obj, query=True, **options):
-        cache_name = 'cache' + repr(obj)
-        if not hasattr(self, cache_name):
-            setattr(self, cache_name, {})
-        cache = getattr(self, cache_name)
-
-        key = repr({**options})
-        if key not in cache and query:
-            try:
-                cache[key] = obj.objects.get(**options)
-            except obj.DoesNotExist:
-                pass
-        return cache.get(key)
-
-    def get_or_create(self, obj, defaults={}, query=True, **options):
-        options = self.clean_arabic(options)
-        defaults.update(**options)
-        _obj = self.cache_get(obj, query=query, **options)
-        if not _obj:
-            _obj = obj(**defaults)
-            _obj.save()
-        return self.cache_get(obj, **options)
-
-
-    def clean_arabic(self, data):
-        if isinstance(data, dict):
-            for k, v in data.items():
-                data[k] = v.encode('utf-8', 'ignore').decode('utf-8')
+    def bulk_create(self, obj, data, size=998):
+        if len(data) > size:
+            print("Update batch of {}, size {}".format(repr(obj), size))
+            obj.objects.bulk_create(data)
+            return []
         return data
 
     def handle(self, *args, **options):
@@ -48,16 +25,17 @@ class Command(BaseCommand):
 
         # insert or update category
         category_collection = source['Category']
-        count = 0
-        for cg in category_collection.find():
-            count += 1
-            if count % 1000 == 0: print('Updated {} category'.format(count))
 
+        category_cache = {cg.name: '' for cg in Category.objects.all()}
+        category_data = []
+
+        for cg in category_collection.find():
             name = cg['name'].lower()
-            obj = self.get_or_create(Category, name=name, defaults={
-                'link': self.clean_url(cg['link']),
-                'classification': cg['parent']
-            })
+            if name not in category_cache:
+                category_data.append(Category(name=name, link=self.clean_url(cg['link']), classification=cg['parent']))
+                category_data = self.bulk_create(Category, category_data)
+        self.bulk_create(Category, category_data, 0)
+        print('Updated all category.')
 
         item_collection = source['Souqitem']
 
@@ -68,17 +46,11 @@ class Command(BaseCommand):
             link = self.clean_url(seller['_id']['link'])
             if link not in seller_cache:
                 seller_data.append(Seller(link=link, name=seller['name']))
-            if len(seller_data) > 998:
-                Seller.objects.bulk_create(seller_data)
-                seller_data = []
-
-        if len(seller_data):
-                Seller.objects.bulk_create(seller_data)
-                seller_data = []
+                seller_data = self.bulk_create(Seller, seller_data)
+        self.bulk_create(Seller, seller_data, 0)
 
         seller_cache = {sr.link: sr for sr in Seller.objects.all()}
-
-        print('Updated {} seller'.format(len(seller_cache)))
+        print('Updated all seller.')
 
         item_cache = {it.trace_id: '' for it in SouqItem.objects.all()}
         item_data = []
@@ -93,12 +65,30 @@ class Command(BaseCommand):
                 item_data.append(SouqItem(trace_id=item['_id']['trace_id'], name=item['name'], link=link,
                          description=item['description'], seller=seller_cache.get(s_link),
                          category=category.lower()))
-            if len(item_data) > 998:
-                SouqItem.objects.bulk_create(item_data)
-                item_data = []
-        if len(item_data):
-            SouqItem.objects.bulk_create(item_data)
-            item_data = []
+                item_data = self.bulk_create(SouqItem, item_data)
+
+        item_cache = {}
+        seller_cache = {}
+        self.bulk_create(SouqItem, item_data, 0)
+        print('Updated all item.')
+
+
+        detail_cache = {d.uid: '' for d in Detail.objects.all()}
+        detail_data = []
+
+        for detail in item_collection.aggregate([{'$group':{
+                '_id': {"trace_id": "$trace_id"},
+                'uid': {'$addToSet': "$_id"},
+                'time': {'$addToSet': "$create_at"},
+                'price': {'$addToSet': "$price"},
+                'quantity': {'$addToSet': "$quantity"},
+            }}], allowDiskUse=True):
+            item = SouqItem.objects.get(detail['_id']['trace_id'])
+            for u, t, p, q in zip(detail['uid'], detail['time'], detail['price'], detail['quantity']):
+                if u not in detail_cache:
+                    detail_data.append(Detail(uid=u, time=t, price=p, quantity=q))
+            detail_data = self.bulk_create(Detail, detail_data)
+        self.bulk_create(Detail, detail_data, 0)
         print("Done.")
 
     def clean_url(self, url):
@@ -107,3 +97,6 @@ class Command(BaseCommand):
         if not url.startswith('https://'):
             url = 'https://uae.souq.com/' + url
         return url
+
+    def clean_str(self, string):
+        return string.encode('utf-8', 'ignore').decode('utf-8')
