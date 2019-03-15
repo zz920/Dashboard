@@ -64,9 +64,10 @@ class Command(BaseCommand):
         seller_cache = {sr.link: '' for sr in Seller.objects.all()}
         seller_data = []
 
-        for seller in item_collection.aggregate([{'$group': {'_id': {"link": "$seller_link"}, "name": {'$first': "$seller"}}}]):
-            if seller['link'] not in seller_cache:
-                seller_data.append(Seller(link=seller['link'], name=seller['name']))
+        for seller in item_collection.aggregate([{'$group': {'_id': {"link": "$seller_link"}, "name": {'$first': "$seller"}}}], allowDiskUse=True):
+            link = self.clean_url(seller['_id']['link'])
+            if link not in seller_cache:
+                seller_data.append(Seller(link=link, name=seller['name']))
             if len(seller_data) > 998:
                 Seller.objects.bulk_create(seller_data)
                 seller_data = []
@@ -74,6 +75,7 @@ class Command(BaseCommand):
         if len(seller_data):
                 Seller.objects.bulk_create(seller_data)
                 seller_data = []
+
         seller_cache = {sr.link: sr for sr in Seller.objects.all()}
 
         print('Updated {} seller'.format(len(seller_cache)))
@@ -83,11 +85,13 @@ class Command(BaseCommand):
 
         for item in item_collection.aggregate([{'$group':{'_id': {"trace_id": "$trace_id"}, "name": {'$first': "$name"},
             "link": {"$first": "$link"}, "description": {"$first": "$description"},
-                "seller": {"$first": "$seller_link"}, "category": {"$first": "$category"}}}]):
+                "seller": {"$first": "$seller_link"}, "category": {"$first": "$category"}}}], allowDiskUse=True):
             category = item['category'] or 'default'
-            if item['trace_id'] not in item_cache:
-                item_data.append(SouqItem(trace_id=item['trace_id'], name=item['name'], link=self.clean_url(item['link']),
-                         description=item['description'], seller=seller_cache.get(item["seller_link"]),
+            link = self.clean_url(item['link'])
+            s_link = self.clean_url(item['seller'])
+            if item['_id']['trace_id'] not in item_cache:
+                item_data.append(SouqItem(trace_id=item['_id']['trace_id'], name=item['name'], link=link,
+                         description=item['description'], seller=seller_cache.get(s_link),
                          category=category.lower()))
             if len(item_data) > 998:
                 SouqItem.objects.bulk_create(item_data)
