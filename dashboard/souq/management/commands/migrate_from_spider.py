@@ -63,7 +63,7 @@ class Command(BaseCommand):
             s_link = self.clean_url(item['seller'])
             if item['_id']['trace_id'] not in item_cache:
                 item_data.append(SouqItem(trace_id=item['_id']['trace_id'], name=item['name'], link=link,
-                         description=item['description'], seller=seller_cache.get(s_link),
+                         description=self.clean_str(item['description']), seller=seller_cache.get(s_link),
                          category=category.lower()))
                 item_data = self.bulk_create(SouqItem, item_data)
 
