@@ -33,7 +33,7 @@ class Command(BaseCommand):
             name = cg['name'].lower()
             if name not in category_cache:
                 category_data.append(Category(name=name, link=self.clean_url(cg['link']), classification=cg['parent']))
-                category_cache['name'] = ''
+                category_cache[name] = ''
                 category_data = self.bulk_create(Category, category_data)
         self.bulk_create(Category, category_data, 0)
         print('Updated all category.')
