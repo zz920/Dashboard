@@ -33,6 +33,7 @@ class Command(BaseCommand):
             name = cg['name'].lower()
             if name not in category_cache:
                 category_data.append(Category(name=name, link=self.clean_url(cg['link']), classification=cg['parent']))
+                category_cache['name'] = ''
                 category_data = self.bulk_create(Category, category_data)
         self.bulk_create(Category, category_data, 0)
         print('Updated all category.')
@@ -46,6 +47,7 @@ class Command(BaseCommand):
             link = self.clean_url(seller['_id']['link'])
             if link not in seller_cache:
                 seller_data.append(Seller(link=link, name=seller['name']))
+                seller_cache[link] = ''
                 seller_data = self.bulk_create(Seller, seller_data)
         self.bulk_create(Seller, seller_data, 0)
 
@@ -65,6 +67,7 @@ class Command(BaseCommand):
                 item_data.append(SouqItem(trace_id=item['_id']['trace_id'], name=item['name'], link=link,
                          description=self.clean_str(item['description']), seller=seller_cache.get(s_link),
                          category=category.lower()))
+                item_cache[item['_id']['trace_id']] = ''
                 item_data = self.bulk_create(SouqItem, item_data)
 
         item_cache = {}
@@ -87,6 +90,7 @@ class Command(BaseCommand):
             for u, t, p, q in zip(detail['uid'], detail['time'], detail['price'], detail['quantity']):
                 if u not in detail_cache:
                     detail_data.append(Detail(uid=u, time=t, price=p, quantity=q))
+                    detail_cache[u] = ''
             detail_data = self.bulk_create(Detail, detail_data)
         self.bulk_create(Detail, detail_data, 0)
         print("Done.")
