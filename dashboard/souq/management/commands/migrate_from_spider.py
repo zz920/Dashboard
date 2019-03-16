@@ -1,7 +1,27 @@
 import pymongo
+import logging
+import traceback
 
+from functools import wraps
 from django.core.management.base import BaseCommand, CommandError
 from souq.models import Category, Detail, SouqItem, Seller
+
+
+logger = logging.getLogger(name='django')
+
+
+def reporter(func):
+    """
+    log the exception
+    """
+    @wraps(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception:
+            logger.error(traceback.format_exc())
+            raise
+    return wrapper
 
 
 class Command(BaseCommand):
@@ -15,11 +35,12 @@ class Command(BaseCommand):
 
     def bulk_create(self, obj, data, size=998):
         if len(data) > size:
-            print("Update batch of {}, size {}".format(repr(obj), size))
+            logger.info("Update batch of {}, size {}".format(repr(obj), size))
             obj.objects.bulk_create(data)
             return []
         return data
 
+    @reporter
     def handle(self, *args, **options):
         source = pymongo.MongoClient(options['mongo_db_uri'])[options['mongo_db_name']]
 
@@ -36,7 +57,7 @@ class Command(BaseCommand):
                 category_cache[name] = ''
                 category_data = self.bulk_create(Category, category_data)
         self.bulk_create(Category, category_data, 0)
-        print('Updated all category.')
+        logger.info('Updated all category.')
 
         item_collection = source['Souqitem']
 
@@ -52,7 +73,7 @@ class Command(BaseCommand):
         self.bulk_create(Seller, seller_data, 0)
 
         seller_cache = {sr.link: sr for sr in Seller.objects.all()}
-        print('Updated all seller.')
+        logger.info('Updated all seller.')
 
         item_cache = {it.trace_id: '' for it in SouqItem.objects.all()}
         item_data = []
@@ -73,7 +94,7 @@ class Command(BaseCommand):
         item_cache = {}
         seller_cache = {}
         self.bulk_create(SouqItem, item_data, 0)
-        print('Updated all item.')
+        logger.info('Updated all item.')
 
 
         detail_cache = {d.uid: '' for d in Detail.objects.all()}
@@ -93,7 +114,7 @@ class Command(BaseCommand):
                     detail_cache[u] = ''
             detail_data = self.bulk_create(Detail, detail_data)
         self.bulk_create(Detail, detail_data, 0)
-        print("Done.")
+        logger.info("Done.")
 
     def clean_url(self, url):
         while url.startswith('/'):
