@@ -1,16 +1,54 @@
-from django.db import models
+from djongo import models
+from django import forms
 
-from .category import Category
-from .seller import Seller
+from dashboard.souq.models import Seller, Category 
 
 
-class SouqItem(models.Model):
+class Detail(models.Model):
+    
+    created = models.DateField()
+    price = models.FloatField()
+    quantity = models.IntegerField()
 
-    trace_id = models.CharField(max_length=30, unique=True)
-    name = models.CharField(max_length=1000)
-    link = models.CharField(max_length=1000, db_index=True)
-    description = models.CharField(max_length=3000)
+    class Meta:
+        abstract = True
 
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
-    # category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    category = models.CharField(max_length=100)
+
+class DetailForm(forms.ModelForm):
+    class Meta:
+        model = Detail
+        fields = (
+            'created', 'price', 'quantity'        
+        )
+
+
+class Item(models.Model):
+
+    _id = models.ObjectIdField()
+    created = models.DateField()
+
+    name = models.CharField()
+    img_link = models.CharField()
+    link = models.CharField()
+
+    plantform = models.CharField()
+    category = models.ForeignKey(Category)
+    brand = models.CharField()
+    ean_code = models.CharField()
+    trace_id = models.CharField()
+    description = models.CharField()
+
+    seller = models.ForeignKey(Seller)
+    detail = models.ArrayModelField(
+            model_container=Detail,
+            model_form_class=DetailForm
+    )
+
+    """
+    Consider the use case here:
+    1. search by the ean_code.
+    2. search by the similar name.
+    3. search by the category.
+    4. search by the brand.
+    5. search by the seller.
+    """
