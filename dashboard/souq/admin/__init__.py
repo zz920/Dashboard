@@ -1,8 +1,6 @@
 from django.contrib import admin
 
-from souq.models.category import Category
-from souq.models.seller import Seller
-from souq.models.item import Item
+from souq.models import Category, Seller, Item
 
 from souq.admin.category import CategoryAdmin
 from souq.admin.seller import SellerAdmin

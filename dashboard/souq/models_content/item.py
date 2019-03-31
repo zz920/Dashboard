@@ -1,12 +1,12 @@
 from djongo import models
 from django import forms
 
-from souq.models import Seller, Category 
+from souq.models_content import Seller, Category
 from .base import ReadOnlyMixin
 
 
 class Detail(models.Model, ReadOnlyMixin):
-    
+
     created = models.DateField()
     price = models.FloatField()
     quantity = models.IntegerField()
@@ -19,7 +19,7 @@ class DetailForm(forms.ModelForm):
     class Meta:
         model = Detail
         fields = (
-            'created', 'price', 'quantity'        
+            'created', 'price', 'quantity'
         )
 
 
