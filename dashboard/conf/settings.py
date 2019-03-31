@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from dashboard.conf.custom_env import getenv
+from conf.custom_env import getenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_p^_2-e0-r@iu+k=9!#=a$8v$08ff10sk@xzn(473pbg1vx88k'
+SECRET_KEY = 'Rd:3K.$sW]B+X&qs(jzqFsh2,"NY5+{P'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,16 +31,16 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jet.dashboard',
     'jet',
     'rest_framework',
-    'rest_framework_swagger',
-    'rest_framework.authtoken',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'souq',
 ]
 
 MIDDLEWARE = [
@@ -140,20 +140,10 @@ CACHES = {
     }
 }
 
-# sso config
-SSO_URL = getenv('SSO_TOKEN_URL')
-SSO_TOKEN_ADMIN = getenv('SSO_TOKEN_ADMIN')
-SSO_TOKEN_PASSWORD = getenv('SSO_TOKEN_PASSWORD')
-SCOPE = getenv('SCOPE')
+JET_INDEX_DASHBOARD = 'dashboard.index.CustomIndexDashboard'
 
-HUB_URL = getenv('HUB_URL')
-OPS_ADMIN_URL = getenv('OPS_ADMIN_URL')
-
-AUTH_USER_MODEL = 'user.User'
+# AUTH_USER_MODEL = 'user.User'
 
 EXPIRE_TIME = getenv('EXPIRE_TIME', 3600)
-
-# kafka config
-KAFKA_BROKER_URI = getenv('KAFKA_BROKER_URI')
 
 from .database import *
