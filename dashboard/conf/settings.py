@@ -143,10 +143,10 @@ CACHES = {
     }
 }
 
-JET_INDEX_DASHBOARD = 'dashboard.index.CustomIndexDashboard'
 
 # AUTH_USER_MODEL = 'user.User'
 
 EXPIRE_TIME = getenv('EXPIRE_TIME', 3600)
 
 from .database import *
+from .jet import *

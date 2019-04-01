@@ -20,6 +20,7 @@ DATABASES = {
         'HOST': getenv('SOUQ_DATABASE_HOST'),
         'PORT': getenv('SOUQ_DATABASE_PORT', type=int),
         'AUTH_SOURCE': getenv('SOUQ_DATABASE_NAME'),
+        'ENFORCE_SCHEMA': False,
     }
 }
 

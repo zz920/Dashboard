@@ -26,24 +26,26 @@ class DetailForm(forms.ModelForm):
 class Item(models.Model, ReadOnlyMixin):
 
     _id = models.ObjectIdField()
-    created = models.DateField()
 
     name = models.CharField(max_length=1000)
-    img_link = models.CharField(max_length=1000)
+    img_link = models.CharField(max_length=1000, null=True, blank=True)
     link = models.CharField(max_length=1000)
 
     plantform = models.CharField(max_length=20)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    brand = models.CharField(max_length=50)
+    category = models.CharField(max_length=100)
+    brand = models.CharField(max_length=50, null=True, blank=True)
     ean_code = models.CharField(max_length=50)
     trace_id = models.CharField(max_length=30)
     description = models.CharField(max_length=1000)
 
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    seller = models.CharField(max_length=100)
     detail = models.ArrayModelField(
             model_container=Detail,
             model_form_class=DetailForm
     )
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         db_table = 'item'

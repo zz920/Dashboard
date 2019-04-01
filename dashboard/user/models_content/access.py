@@ -1,9 +1,10 @@
 from django.db import models
 from common.models_content.base_model import BaseModel
+from common.enum.access import SystemValidAccess
 
 
 class Access(BaseModel):
-    name = models.CharField(max_length=30)
+    access_type = models.CharField(max_length=50, choices=[(tag, tag.value) for tag in SystemValidAccess], default=SystemValidAccess.NO_ACCESS)
     description = models.TextField(help_text='description of access')
 
     class Meta:

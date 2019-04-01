@@ -6,14 +6,8 @@ from .role import Role
 
 
 class User(AbstractUser, BaseModel):
-    # move to enum
-    ADMIN = 1
-    CLIENT_USER = 2
-    FETCHR_USER = 3
 
-    USER_TYPE_CHOICES = ((ADMIN, 'Admin'), (CLIENT_USER, 'Client User'), (FETCHR_USER, 'Fetchr User'),)
     phone_number = models.CharField(max_length=45)
-    user_type = models.PositiveIntegerField(choices=USER_TYPE_CHOICES, default=ADMIN)
     roles = models.ForeignKey(Role, null=True, on_delete=models.SET_NULL)
 
     class Meta:
