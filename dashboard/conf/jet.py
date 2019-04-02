@@ -7,7 +7,5 @@ JET_SIDE_MENU_COMPACT = True
 JET_SIDE_MENU_ITEMS = [
     {'label': 'User Managment', 'app_label': 'user', 'items': [
     	{'name': 'user.user', 'label': 'User List'},
-	{'name': 'user.role', 'label': 'Role List'},
-	{'name': 'user.access', 'label': 'Access List'},
     ]},
 ]

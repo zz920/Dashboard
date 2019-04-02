@@ -2,13 +2,11 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from common.models_content.base_model import BaseModel
-from .role import Role
 
 
 class User(AbstractUser, BaseModel):
 
     phone_number = models.CharField(max_length=45)
-    roles = models.ForeignKey(Role, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = 'users'
@@ -34,7 +32,3 @@ class User(AbstractUser, BaseModel):
             return cls.objects.get(id=id)
         except cls.DoesNotExist:
             return None
-
-    @property
-    def role(self):
-        return self.roles.name
