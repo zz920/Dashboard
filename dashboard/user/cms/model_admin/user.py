@@ -1,6 +1,6 @@
-from django.contrib import admin
+from common.cms.model_admin.base import BaseModelAdmin
 
 from user.cms.model_admin.inline import CustomerInline
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseModelAdmin):
     inlines = (CustomerInline, )
