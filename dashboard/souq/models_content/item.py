@@ -1,7 +1,8 @@
 from djongo import models
 from django import forms
 
-from souq.models_content import Seller, Category
+from souq.models_content.seller import Seller
+from souq.models_content.category import Category
 from .base import ReadOnlyMixin
 
 
