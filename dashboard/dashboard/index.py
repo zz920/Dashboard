@@ -4,7 +4,7 @@ from jet.dashboard.dashboard import Dashboard, AppIndexDashboard
 
 
 class CustomIndexDashboard(Dashboard):
-    columns = 3
+    columns = 0
 
     def init_with_context(self, context):
         self.available_children.append(modules.LinkList)

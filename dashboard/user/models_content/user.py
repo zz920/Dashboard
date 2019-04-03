@@ -1,12 +1,29 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 
 from common.models_content.base_model import BaseModel
 
 
+class UserAuthManager(UserManager):
+    use_in_migrations = True
+
+    def create_superuser(self, username, email, password, **extra_fields):
+        user = super(UserAuthManager, self).create_superuser(username, email, password, **extra_fields)
+        user.save()
+        return user
+
+    def create_admin_user(self, username, email, password, **extra_fields):
+        return self._create_user(username, email, password, **extra_fields)
+
+    def create_customer_user(self, username, email, password, **extra_fields):
+        return self._create_user(username, email, password, **extra_fields)
+
+
 class User(AbstractUser, BaseModel):
 
     phone_number = models.CharField(max_length=45)
+
+    objects = UserAuthManager()
 
     class Meta:
         db_table = 'users'
