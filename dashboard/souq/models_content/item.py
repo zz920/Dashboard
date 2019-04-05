@@ -12,9 +12,10 @@ class Detail(models.Model, ReadOnlyMixin):
     price = models.FloatField()
     quantity = models.IntegerField()
 
+    """
     class Meta:
         abstract = True
-
+    """
 
 class DetailForm(forms.ModelForm):
     class Meta:
@@ -42,7 +43,7 @@ class Item(models.Model, ReadOnlyMixin):
     seller = models.CharField(max_length=100)
     detail = models.ArrayModelField(
             model_container=Detail,
-            model_form_class=DetailForm
+            #model_form_class=DetailForm
     )
 
     def __str__(self):
@@ -58,3 +59,12 @@ class Item(models.Model, ReadOnlyMixin):
     4. search by the brand.
     5. search by the seller.
     """
+
+    def get_detail_list(self):
+        ds = [(d.created, d.quantity, d.price) for d in self.detail]
+        ds.sort(key=lambda x: x[0])
+        date = [d[0] for d in ds]
+        quantity = [d[1] for d in ds]
+        price = [d[2] for d in ds]
+        sell = [0] + [max(ds[i-1] - ds[i], 0) for i in range(1, len(ds))]
+        return dict(date=date, price=price, sell=sell, quantity=quantity)

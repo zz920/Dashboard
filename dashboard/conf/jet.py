@@ -12,6 +12,6 @@ JET_SIDE_MENU_ITEMS = [
         {'name': 'auth.group', 'label': 'Group Info'},
     ]},
     {'label': 'Item View', 'app_label': 'main_dashboard', 'items': [
-        {'label': 'Item view', 'url': '/main_dashboard/itemproxy'},
+        {'label': 'Item view', 'url': '/souq/item'},
     ]}
 ]
