@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'jet.dashboard',
     'jet',
+    #'chartjs',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,10 +76,10 @@ TEMPLATES = [
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join("/opt", "static")
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '../static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 WSGI_APPLICATION = 'wsgi.application'

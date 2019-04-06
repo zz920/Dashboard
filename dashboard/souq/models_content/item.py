@@ -63,8 +63,8 @@ class Item(models.Model, ReadOnlyMixin):
     def get_detail_list(self):
         ds = [(d.created, d.quantity, d.price) for d in self.detail]
         ds.sort(key=lambda x: x[0])
-        date = [d[0] for d in ds]
+        date = [d[0].strftime('%Y-%m-%d') for d in ds]
         quantity = [d[1] for d in ds]
         price = [d[2] for d in ds]
-        sell = [0] + [max(ds[i-1] - ds[i], 0) for i in range(1, len(ds))]
+        sell = [0] + [max(ds[i-1][1] - ds[i][1], 0) for i in range(1, len(ds))]
         return dict(date=date, price=price, sell=sell, quantity=quantity)
