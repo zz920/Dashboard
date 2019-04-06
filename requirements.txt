@@ -8,6 +8,8 @@ django-jet==1.0.8
 django-pkgconf==0.3.0
 djangorestframework==3.9.0
 djongo==1.2.32
+gunicorn==19.9.0
+greenlet==0.4.15
 ipdb==0.11
 ipython==7.3.0
 ipython-genutils==0.2.0
