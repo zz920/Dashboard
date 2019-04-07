@@ -1,3 +1,4 @@
+import debug_toolbar
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
@@ -14,6 +15,7 @@ admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
 '''
 
 urlpatterns = [
+                    path('__debug__/', include(debug_toolbar.urls)),
                     re_path(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
                     re_path(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
                     path('', admin.site.urls),
