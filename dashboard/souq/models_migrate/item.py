@@ -1,36 +1,43 @@
 from djongo import models
 from django import forms
 
-from souq.models_content.seller import Seller
-from souq.models_content.category import Category
+from souq.models_migrate.seller import MSeller
+from souq.models_migrate.category import MCategory
 
 
-class Item(models.Model):
+class MDetail(models.Model):
+
+    created = models.DateField()
+    price = models.FloatField()
+    quantity = models.IntegerField()
+
+
+class MItem(models.Model):
+
+    _id = models.ObjectIdField()
 
     name = models.CharField(max_length=1000)
     img_link = models.CharField(max_length=1000, null=True, blank=True)
-    link = models.CharField(max_length=1000, unique=True)
+    link = models.CharField(max_length=1000)
 
     plantform = models.CharField(max_length=20)
-
+    category = models.GenericObjectIdField()
     brand = models.CharField(max_length=50, null=True, blank=True)
     ean_code = models.CharField(max_length=50)
     trace_id = models.CharField(max_length=30)
     description = models.CharField(max_length=1000)
 
-
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, null=True)
+    seller = models.GenericObjectIdField()
+    detail = models.ArrayModelField(
+            model_container=MDetail,
+            #model_form_class=DetailForm
+    )
 
     def __str__(self):
         return self.name
 
     class Meta:
-        indexes = [
-            models.Index(fields=['link']),
-            models.Index(fields=['ean_code']),
-            models.Index(fields=['name']),
-        ]
+        db_table = 'item'
     """
     Consider the use case here:
     1. search by the ean_code.
@@ -48,12 +55,3 @@ class Item(models.Model):
         price = [d[2] for d in ds]
         sell = [0] + [max(ds[i-1][1] - ds[i][1], 0) for i in range(1, len(ds))]
         return dict(date=date, price=price, sell=sell, quantity=quantity)
-
-
-class Detail(models.Model):
-
-    created = models.DateField()
-    price = models.FloatField()
-    quantity = models.IntegerField()
-
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
