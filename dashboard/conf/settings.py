@@ -153,3 +153,4 @@ EXPIRE_TIME = getenv('EXPIRE_TIME', 3600)
 
 from .database import *
 from .jet import *
+from .debug_tool import *
