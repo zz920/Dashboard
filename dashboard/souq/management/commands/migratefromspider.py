@@ -116,7 +116,7 @@ class Command(BaseCommand):
             for item in MItem.objects.filter(category=category._id).all():
                 tm = self.cache[item._id]
                 for detail in item.detail:
-                    dtl, _ = Detail.objects.update_or_create(
+                    dtl, _ = Detail.objects.get_or_create(
                         item=tm, created=detail.created,
                         defaults={**dict(
                             price=detail.price,
