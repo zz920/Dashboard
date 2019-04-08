@@ -13,6 +13,7 @@ class Command(BaseCommand):
         self.migrate_category()
         self.migrate_seller()
         self.migrate_item()
+        self.migrate_detail()
 
     @timeit
     def common_migration(self, query, uk, model, mapping, f=lambda x: x):
@@ -33,7 +34,8 @@ class Command(BaseCommand):
             }
             if getattr(obj, uk) not in uk_set:
                 create_list.append(model(**data))
-        model.objects.bulk_create(create_list)
+        if create_list:
+            model.objects.bulk_create(create_list)
         print("{} Objects / {}".format(repr(model), len(create_list)))
 
         # update cache
@@ -110,16 +112,22 @@ class Command(BaseCommand):
             )
 
 
-    @timeit
-    def migration_detail(self, query, uk, model, mapping, f=lambda x: x):
+    def migrate_detail(self):
         for category in MCategory.objects.all():
+            create_list = []
             for item in MItem.objects.filter(category=category._id).all():
-                tm = self.cache[item._id]
+                tm = Item.objects.get(link=item.link)
                 for detail in item.detail:
-                    dtl, _ = Detail.objects.get_or_create(
-                        item=tm, created=detail.created,
-                        defaults={**dict(
-                            price=detail.price,
-                            quantity=detail.quantity
-                        )}
-                    )
+                    if not Detail.objects.filter(item=tm, created=detail.created).first():
+                        create_list.append(
+                            Detail(
+                                **dict(
+                                    item=tm,
+                                    created=detail.created,
+                                    price=detail.price,
+                                    quantity=detail.quantity
+                                )
+                            )
+                        )
+            Detail.objects.bulk_create(create_list)
+            print("{} Objects / {}".format(repr(Detail), len(create_list)))
