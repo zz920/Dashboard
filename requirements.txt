@@ -1,7 +1,7 @@
 backcall==0.1.0
 dataclasses==0.6
 decorator==4.3.2
-Django==2.1.7
+Django==2.2
 django-controlcenter==0.2.9
 django-environ==0.4.5
 django-jet==1.0.8
@@ -15,13 +15,13 @@ ipdb==0.11
 ipython==7.3.0
 ipython-genutils==0.2.0
 jedi==0.13.3
-mysqlclient==1.4.2.post1
 parso==0.3.4
 pexpect==4.6.0
 pickleshare==0.7.5
 pkg-resources==0.0.0
 prompt-toolkit==2.0.9
 ptyprocess==0.6.0
+psycopg2==2.8.1
 Pygments==2.3.1
 pymongo==3.7.2
 pytz==2018.9

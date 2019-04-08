@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install -y python3-pip libmysqlclient-dev nginx virtualenv
+sudo apt-get install -y python3-pip libpq-dev nginx virtualenv
 sudo virtualenv --python=python3 /opt/env
 touch /etc/nginx/sites-enable/dashboard.org
 mkdir /var/log/dashboard

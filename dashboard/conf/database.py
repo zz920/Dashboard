@@ -5,7 +5,7 @@ from conf.custom_env import getenv
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': getenv('DEFAULT_DATABASE_NAME'),
         'USER': getenv('DEFAULT_DATABASE_USERNAME'),
         'PASSWORD': getenv('DEFAULT_DATABASE_PASSWORD'),
