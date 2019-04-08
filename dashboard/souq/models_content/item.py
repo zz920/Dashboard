@@ -41,7 +41,7 @@ class Item(models.Model):
     """
 
     def get_detail_list(self):
-        ds = [(d.created, d.quantity, d.price) for d in self.detail]
+        ds = [(d.created, d.quantity, d.price) for d in self.detail_set.all()]
         ds.sort(key=lambda x: x[0])
         date = [d[0].strftime('%Y-%m-%d') for d in ds]
         quantity = [d[1] for d in ds]

@@ -7,7 +7,7 @@ from django.contrib.admin.views.main import ChangeList
 class ItemProxyAdmin(admin.ModelAdmin):
 
     list_display = ('product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
-    exclude = ('_id', 'img_link', 'category', 'seller', 'detail')
+    exclude = ('img_link', 'category', 'seller', 'detail')
     search_fields = ['link', 'ean_code']
     list_per_page = 10
     view_on_site = True
@@ -21,7 +21,7 @@ class ItemProxyAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context= extra_context or {}
-        extra_context.update(**self.model.objects.get(_id=object_id).get_detail_list())
+        extra_context.update(**self.model.objects.get(id=object_id).get_detail_list())
         return super().change_view(request, object_id, form_url, extra_context)
 
     def has_add_permission(self, request, obj=None):
