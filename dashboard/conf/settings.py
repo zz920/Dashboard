@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'souq',
     'user',
     'main_dashboard',
+    'common',
 ]
 
 MIDDLEWARE = [

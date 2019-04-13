@@ -1,4 +1,4 @@
-JET_INDEX_DASHBOARD = 'main_dashboard.index.CustomIndexDashboard'
+JET_INDEX_DASHBOARD = 'main_dashboard.index.CustomerIndexDashboard'
 
 JET_DEFAULT_THEME = 'light-blue'
 
