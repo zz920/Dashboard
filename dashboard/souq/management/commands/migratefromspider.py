@@ -9,13 +9,13 @@ class Command(BaseCommand):
     help = 'Migrate data from spider db.'
     cache = {}
 
+    @timeit
     def handle(self, *args, **options):
         self.migrate_category()
         self.migrate_seller()
         self.migrate_item()
         self.migrate_detail()
 
-    @timeit
     def common_migration(self, query, uk, model, mapping, f=lambda x: x):
         """
         mapping is local_field: mongo_field
@@ -36,7 +36,9 @@ class Command(BaseCommand):
                 create_list.append(model(**data))
         if create_list:
             model.objects.bulk_create(create_list)
-        print("{} Objects / {}".format(repr(model), len(create_list)))
+
+        if len(create_list):
+            print("{} Objects / {}".format(repr(model), len(create_list)))
 
         # update cache
         local_ext = model.objects.filter(**{uk + '__in': unique_key}).all()
@@ -44,6 +46,7 @@ class Command(BaseCommand):
         for obj in mongo_objs:
             self.cache[obj._id] = tmp_cache[getattr(obj, uk)]
 
+    @timeit
     def migrate_category(self):
         def f(x):
             if isinstance(x, bytes):
@@ -62,6 +65,7 @@ class Command(BaseCommand):
             f=f
         )
 
+    @timeit
     def migrate_seller(self):
         def f(x):
             if isinstance(x, bytes):
@@ -79,6 +83,7 @@ class Command(BaseCommand):
             f=f,
         )
 
+    @timeit
     def migrate_item(self):
         from bson.objectid import ObjectId
         def f(x):
@@ -110,7 +115,7 @@ class Command(BaseCommand):
                 f=f
             )
 
-
+    @timeit
     def migrate_detail(self):
         detail_cache = set(Detail.objects.values_list('identify', flat=True))
         for category in MCategory.objects.all():
