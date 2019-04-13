@@ -55,5 +55,11 @@ class Detail(models.Model):
     created = models.DateField()
     price = models.FloatField()
     quantity = models.IntegerField()
+    identify = models.CharField(max_length=50, unique=True)
 
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['identify']),
+        ]
