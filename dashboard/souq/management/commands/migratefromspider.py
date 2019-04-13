@@ -44,7 +44,6 @@ class Command(BaseCommand):
         for obj in mongo_objs:
             self.cache[obj._id] = tmp_cache[getattr(obj, uk)]
 
-
     def migrate_category(self):
         def f(x):
             if isinstance(x, bytes):
@@ -136,5 +135,7 @@ class Command(BaseCommand):
                                 )
                             )
                         )
+                        # to avoid the same day scrapy twice
+                        detail_cache.add(identify)
             Detail.objects.bulk_create(create_list)
             print("{} Objects / {}".format(repr(Detail), len(create_list)))
