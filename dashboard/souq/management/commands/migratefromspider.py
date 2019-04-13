@@ -118,6 +118,10 @@ class Command(BaseCommand):
             create_list = []
             for item in MItem.objects.filter(category=category._id).all():
                 tm = self.cache.get(item._id)
+                if not tm:
+                    # This case is the spider create new item during the migrations, just ignore it for now.
+                    continue
+
                 for detail in item.detail:
                     identify = "{}_{}".format(detail.created, item._id)
                     if identify not in detail_cache:
