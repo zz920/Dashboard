@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'jet.dashboard',
     'jet',
+    #'chartjs',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -151,4 +152,3 @@ EXPIRE_TIME = getenv('EXPIRE_TIME', 3600)
 
 from .database import *
 from .jet import *
-from .celery import *
