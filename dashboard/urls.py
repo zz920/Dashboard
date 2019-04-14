@@ -16,7 +16,8 @@ admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
 urlpatterns = [
                     re_path(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
                     re_path(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
-                    re_path(r'^accounts/', include('django-allauth')),
+                    # re_path(r'^accounts/', include('allauth.urls')),
+                    re_path(r'^accounts/', include('registration.backends.default.urls')),
                     path('', admin.site.urls),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
