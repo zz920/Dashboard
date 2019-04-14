@@ -1,0 +1,22 @@
+{% load i18n %}
+
+{% if module.children %}
+    <ul>
+            {% for link in module.children %}
+                <li>
+                    <div class='news-content'>
+                        <a style="font-size: 150%"><b>{{ link.title }}</b></a>
+                        <span class="icon-date">{{ link.created_at }}</span>
+                            {{ link.content|safe }}
+                    </div>
+                </li>
+            {% endfor %}
+    </ul>
+{% else %}
+    <ul>
+        <li>
+            {% trans "It's Empty" %}
+        </li>
+    </ul>
+{% endif %}
+
