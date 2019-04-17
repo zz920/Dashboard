@@ -54,6 +54,7 @@ class Detail(models.Model):
 
     created = models.DateField()
     price = models.FloatField()
+    sales = models.IntegerField(default=0)
     quantity = models.IntegerField()
     identify = models.CharField(max_length=50, unique=True)
 
