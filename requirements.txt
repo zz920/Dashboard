@@ -1,3 +1,4 @@
+architect==0.5.6
 backcall==0.1.0
 dataclasses==0.6
 decorator==4.3.2
