@@ -92,6 +92,8 @@ class Command(BaseCommand):
             if isinstance(x, bytes):
                 return x.decode('utf-8', 'ignore')
             if isinstance(x, ObjectId):
+                if x not in self.cache:
+                    self.migrate_seller()
                 return self.cache[x]
             return x
 
