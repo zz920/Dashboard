@@ -11,6 +11,9 @@ class MDetail(models.Model):
     price = models.FloatField()
     quantity = models.IntegerField()
 
+    buybox = models.BooleanField()
+    sales = models.IntegerField()
+
 
 class MItem(models.Model):
 
@@ -25,6 +28,7 @@ class MItem(models.Model):
     brand = models.CharField(max_length=50, null=True, blank=True)
     ean_code = models.CharField(max_length=50)
     trace_id = models.CharField(max_length=30)
+    unit_id = models.CharField(max_length=30)
     description = models.CharField(max_length=1000)
 
     seller = models.GenericObjectIdField()

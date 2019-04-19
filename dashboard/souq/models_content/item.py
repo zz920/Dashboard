@@ -41,13 +41,14 @@ class Item(models.Model):
     """
 
     def get_detail_list(self):
-        ds = [(d.created, d.quantity, d.price) for d in self.detail_set.all()]
+        ds = [(d.created, d.quantity, d.price, d.sales, d.buybox) for d in self.detail_set.all()]
         ds.sort(key=lambda x: x[0])
         date = [d[0].strftime('%Y-%m-%d') for d in ds]
         quantity = [d[1] for d in ds]
         price = [d[2] for d in ds]
-        sell = [0] + [max(ds[i-1][1] - ds[i][1], 0) for i in range(1, len(ds))]
-        return dict(date=date, price=price, sell=sell, quantity=quantity)
+        sell = [d[3] for d in ds]
+        buybox = [d[4] for d in ds]
+        return dict(date=date, price=price, sell=sell, quantity=quantity, buybox=buybox)
 
 
 class Detail(models.Model):
@@ -55,6 +56,7 @@ class Detail(models.Model):
     created = models.DateField()
     price = models.FloatField()
     sales = models.IntegerField(default=0)
+    buybox = models.BooleanField()
     quantity = models.IntegerField()
     identify = models.CharField(max_length=50, unique=True)
 
@@ -64,3 +66,5 @@ class Detail(models.Model):
         indexes = [
             models.Index(fields=['identify']),
         ]
+
+
