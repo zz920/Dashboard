@@ -18,7 +18,7 @@ class HotCategoryAdmin(admin.ModelAdmin):
             return (None,)
 
     def hot_items(self, instance):
-        return mark_safe('<a href="{}">Check hot item</a>'.format(''))
+        return mark_safe('<a href="/souq/hotitem/?category={}">Check hot item</a>'.format(instance.id))
     hot_items.short_description = "hot items"
 
     def change_view(self, request, object_id, form_url='', extra_context=None):

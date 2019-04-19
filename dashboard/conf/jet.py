@@ -3,6 +3,7 @@ JET_INDEX_DASHBOARD = 'main_dashboard.index.CustomerIndexDashboard'
 # JET_DEFAULT_THEME = 'light-blue'
 
 JET_SIDE_MENU_COMPACT = True
+JET_CHANGE_FORM_SIBLING_LINKS = False
 
 JET_SIDE_MENU_ITEMS = [
     {'label': 'USER MANAGEMENT', 'items':[

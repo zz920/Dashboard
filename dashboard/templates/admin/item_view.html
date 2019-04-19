@@ -28,7 +28,8 @@
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
                     label:'Quantity',
-                    data: [{% for q in quantity %}{{ q }},{% endfor %}]
+                    data: [{% for q in quantity %}{{ q }},{% endfor %}],
+                    backgroundColor: 'rgba(46, 138, 138, 1)'
                 }],
             },
             options: {
@@ -49,17 +50,21 @@
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
                     label:'Price',
-                    data: [{% for p in price %}{{ p }},{% endfor %}]
+                    data: [{% for p in price %}{{ p }},{% endfor %}],
+                    backgroundColor: 'rgba(103, 210, 150, 1)'
                 }]
             }
         });
+
+        var scolor = [{% for c in buybox %} {% if c %} 'rgba(53, 110, 222, 1)', {% else %} 'rgba(180, 52, 100, 1)', {% endif %}{% endfor %}];
         var schart = new Chart(sctx, {
             type: 'bar', 
             data: {
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
                     label:'Sell',
-                    data: [{% for s in sell %}{{ s }},{% endfor %}]
+                    data: [{% for s in sell %}{{ s }},{% endfor %}],
+                    backgroundColor: scolor
                 }]
             },
             options: {

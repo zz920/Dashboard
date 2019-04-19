@@ -1,30 +1,33 @@
 from django.shortcuts import redirect
 from django.contrib import admin
+from django.db.models import Max
 from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
 
 
-class ItemChangeList(ChangeList):
+class HotItemChangeList(ChangeList):
+    LIMIT = 30
+    def get_queryset(self, request, **kwargs):
+        qs = super().get_queryset(request, **kwargs)
+        if request.GET.get('category'):
+            qs = qs.filter(category__id=request.GET.get('category')).annotate(latest_detail=Max('detail__sales')).order_by('-latest_detail')
+        elif request.GET.get('seller'):
+            qs = qs.filter(seller__id=request.GET.get('seller')).annotate(latest_detail=Max('detail__sales')).order_by('-latest_detail')
 
-    LIMIT = 100
-
-    def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs)
         return qs[:self.LIMIT]
 
 
-class ItemProxyAdmin(admin.ModelAdmin):
+class HotItemProxyAdmin(admin.ModelAdmin):
 
     list_display = ('product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
-    exclude = ('img_link', 'category', 'seller', 'detail')
-    search_fields = ['link', 'ean_code']
+    exclude = ('img_link', 'seller', 'detail')
     list_per_page = 10
     view_on_site = True
 
     change_form_template = 'admin/item_view.html'
 
     def get_changelist(self, request, **kwargs):
-        return ItemChangeList
+        return HotItemChangeList
 
     def product_img(self, instance):
         if instance.img_link:
