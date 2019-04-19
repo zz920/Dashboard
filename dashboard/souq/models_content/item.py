@@ -1,3 +1,4 @@
+import architect
 from djongo import models
 from django import forms
 
@@ -16,6 +17,7 @@ class Item(models.Model):
     brand = models.CharField(max_length=50, null=True, blank=True)
     ean_code = models.CharField(max_length=50)
     trace_id = models.CharField(max_length=30)
+    unit_id = models.CharField(max_length=30, unique=True)
     description = models.CharField(max_length=1000)
 
 
@@ -30,6 +32,8 @@ class Item(models.Model):
             models.Index(fields=['link']),
             models.Index(fields=['ean_code']),
             models.Index(fields=['name']),
+            models.Index(fields=['unit_id']),
+            models.Index(fields=['trace_id']),
         ]
     """
     Consider the use case here:
@@ -51,6 +55,7 @@ class Item(models.Model):
         return dict(date=date, price=price, sell=sell, quantity=quantity, buybox=buybox)
 
 
+@architect.install('partition', type='range', subtype='integer', constraint='2000', column='item')
 class Detail(models.Model):
 
     created = models.DateField()

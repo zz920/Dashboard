@@ -98,7 +98,7 @@ class Command(BaseCommand):
         for category in MCategory.objects.all():
             self.common_migration(
                 query=MItem.objects.filter(category=category._id).all,
-                uk='unit_id',
+                uk='link',
                 model=Item,
                 mapping={
                     'link': 'link',
