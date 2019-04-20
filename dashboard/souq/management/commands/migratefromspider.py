@@ -35,7 +35,7 @@ class Command(BaseCommand):
             if getattr(obj, uk) not in uk_set:
                 create_list.append(model(**data))
         if create_list:
-            model.objects.bulk_create(create_list, ignore_conflicts=True)
+            model.objects.bulk_create(create_list, ignore_conflicts=False)
 
         if len(create_list):
             print("{} Objects / {}".format(repr(model), len(create_list)))
@@ -103,7 +103,7 @@ class Command(BaseCommand):
         for category in MCategory.objects.all():
             self.common_migration(
                 query=MItem.objects.filter(category=category._id).all,
-                uk='link',
+                uk='unit_id',
                 model=Item,
                 mapping={
                     'link': 'link',

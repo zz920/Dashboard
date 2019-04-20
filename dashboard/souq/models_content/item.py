@@ -10,7 +10,7 @@ class Item(models.Model):
 
     name = models.CharField(max_length=1000)
     img_link = models.CharField(max_length=1000, null=True, blank=True)
-    link = models.CharField(max_length=1000, unique=True)
+    link = models.CharField(max_length=1000)
 
     plantform = models.CharField(max_length=20)
 
