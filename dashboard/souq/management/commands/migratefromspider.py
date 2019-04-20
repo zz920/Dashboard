@@ -44,7 +44,10 @@ class Command(BaseCommand):
         local_ext = model.objects.filter(**{uk + '__in': unique_key}).all()
         tmp_cache = {getattr(d, uk): d for d in local_ext}
         for obj in mongo_objs:
-            self.cache[obj._id] = tmp_cache[getattr(obj, uk)]
+            try:
+                self.cache[obj._id] = tmp_cache[getattr(obj, uk)]
+            except:
+                print("{} Object missing: {}".format(obj, uk))
 
     @timeit
     def migrate_category(self):
