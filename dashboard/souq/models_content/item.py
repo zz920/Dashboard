@@ -55,7 +55,7 @@ class Item(models.Model):
         return dict(date=date, price=price, sell=sell, quantity=quantity, buybox=buybox)
 
 
-@architect.install('partition', type='range', subtype='integer', constraint='2000', column='item')
+@architect.install('partition', type='range', subtype='integer', constraint='10000', column='item_id')
 class Detail(models.Model):
 
     created = models.DateField()
