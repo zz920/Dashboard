@@ -1,18 +1,22 @@
+from datetime import datetime, timedelta
 from django.shortcuts import redirect
 from django.contrib import admin
-from django.db.models import Max
+from django.db.models import Max, Sum, Q
 from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
 
 
 class HotItemChangeList(ChangeList):
     LIMIT = 30
+
     def get_queryset(self, request, **kwargs):
         qs = super().get_queryset(request, **kwargs)
+        day_limit = datetime.now() - timedelta(days=3) 
+        sum_sales = Sum('detail__sales', filter=Q(detail__created__gte=day_limit))
         if request.GET.get('category'):
-            qs = qs.filter(category__id=request.GET.get('category')).annotate(latest_detail=Max('detail__sales')).order_by('-latest_detail')
+            qs = qs.filter(category__id=request.GET.get('category')).annotate(sum_value=sum_sales).order_by('-sum_value')
         elif request.GET.get('seller'):
-            qs = qs.filter(seller__id=request.GET.get('seller')).annotate(latest_detail=Max('detail__sales')).order_by('-latest_detail')
+            qs = qs.filter(seller__id=request.GET.get('seller')).annotate(sum_value=sum_sales).order_by('-sum_value')
 
         return qs[:self.LIMIT]
 
