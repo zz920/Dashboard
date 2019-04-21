@@ -36,7 +36,6 @@ class Command(BaseCommand):
                 create_list.append(model(**data))
         if create_list:
             model.objects.bulk_create(create_list, ignore_conflicts=False)
-
         if len(create_list):
             print("{} Objects / {}".format(repr(model), len(create_list)))
 
@@ -93,7 +92,9 @@ class Command(BaseCommand):
             if x is None:
                 return ''
             if isinstance(x, bytes):
-                return x.decode('utf-8', 'ignore')
+                x = x.decode('utf-8', 'ignore')
+            if isinstance(x, str):
+                x = x.replace('\x00', '')
             if isinstance(x, ObjectId):
                 if x not in self.cache:
                     self.migrate_seller()
