@@ -1,30 +1,26 @@
-from django.shortcuts import redirect
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
 
 
-class ItemChangeList(ChangeList):
+class SingleItemChangeList(ChangeList):
 
-    LIMIT = 100
-
-    def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs)
-        return qs[:self.LIMIT]
+    def get_queryset(self, request, **kwargs):
+        qs = super().get_queryset(request, **kwargs)
+        return qs.none()
 
 
-class ItemProxyAdmin(admin.ModelAdmin):
+class SingleItemProxyAdmin(admin.ModelAdmin):
 
     list_display = ('product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
-    exclude = ('img_link', 'category', 'seller', 'detail')
-    search_fields = ['link__exact', 'ean_code__exact', 'brand', 'trace_id']
-    list_per_page = 10
+    exclude = ('img_link', 'seller', 'detail')
+    search_fields = ['link__exact', 'ean_code__exact']
     view_on_site = True
 
     change_form_template = 'admin/item_view.html'
 
     def get_changelist(self, request, **kwargs):
-        return ItemChangeList
+        return SingleItemChangeList
 
     def product_img(self, instance):
         if instance.img_link:
