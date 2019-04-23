@@ -56,7 +56,6 @@
             }
         });
 
-        var scolor = [{% for c in buybox %} {% if c %} 'rgba(53, 110, 222, 1)', {% else %} 'rgba(180, 52, 100, 1)', {% endif %}{% endfor %}];
         var schart = new Chart(sctx, {
             type: 'bar', 
             data: {
@@ -64,7 +63,7 @@
                 datasets: [{
                     label:'Sell',
                     data: [{% for s in sell %}{{ s }},{% endfor %}],
-                    backgroundColor: scolor
+                    backgroundColor: 'rgba(53, 110, 222, 1)',
                 }]
             },
             options: {

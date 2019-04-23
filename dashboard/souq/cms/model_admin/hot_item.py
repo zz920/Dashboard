@@ -11,7 +11,7 @@ class HotItemChangeList(ChangeList):
 
     def get_queryset(self, request, **kwargs):
         qs = super().get_queryset(request, **kwargs)
-        day_limit = datetime.now() - timedelta(days=3) 
+        day_limit = datetime.now() - timedelta(days=5) 
         sum_sales = Sum('detail__sales', filter=Q(detail__created__gte=day_limit))
         if request.GET.get('category'):
             qs = qs.filter(category__id=request.GET.get('category')).annotate(sum_value=sum_sales).order_by('-sum_value')
