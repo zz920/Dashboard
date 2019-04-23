@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'jet.dashboard',
     'jet',
+    'cachalot',
     'ckeditor',
     'rest_framework',
     'registration',
@@ -152,9 +153,9 @@ REST_FRAMEWORK = {
     )
 }
 
-REDIS_HOST = getenv('REDIS_HOST')
+REDIS_HOST = getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = getenv('REDIS_PORT', 6379)
-REDIS_DATABASE = getenv('REDIS_DATABASE')
+REDIS_DATABASE = getenv('REDIS_DATABASE', 0)
 
 REDIS_URL = "redis://{}:{}/{}".format(REDIS_HOST, REDIS_PORT, REDIS_DATABASE)
 
@@ -168,6 +169,8 @@ CACHES = {
     }
 }
 
+CACHALOT_ENABLED = True
+CACHALOT_TIMEOUT = 300
 
 EXPIRE_TIME = getenv('EXPIRE_TIME', 3600)
 
