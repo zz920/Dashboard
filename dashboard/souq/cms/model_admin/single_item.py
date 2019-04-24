@@ -8,7 +8,8 @@ class SingleItemChangeList(ChangeList):
     def get_queryset(self, request, **kwargs):
         qs = super().get_queryset(request, **kwargs)
         if request.GET.dict():
-            return qs
+            # only list the item showing the page
+            return qs.filter(link__endswith='i/')
         return qs.none()
 
 

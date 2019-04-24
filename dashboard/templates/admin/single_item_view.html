@@ -41,7 +41,6 @@
                     {% for b in bunch %}
                     {
                         label:'{{ b.seller.name }}',
-                        steppedLine: true,
                         data: [{% for q in b.item.quantity %}{{ q }},{% endfor %}],
                         borderColor: randomColorGenerator('{{ b.seller.name }}'),
                         backgroundColor: randomColorGenerator('{{ b.seller.name }}'),
