@@ -16,5 +16,6 @@ JET_SIDE_MENU_ITEMS = [
         {'label': _('COMMON ITEM VIEW'), 'url': '/souq/item'},
         {'label': _('HOT ITEMS BY CATEGORY'), 'url': '/souq/category'},
         {'label': _('HOT ITEMS BY SELLER'), 'url': '/souq/seller'},
+        {'label': _('SINGLE ITEMS ANALYSIS'), 'url': '/souq/singleitem'}
     ]},
 ]

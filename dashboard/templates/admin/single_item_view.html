@@ -4,35 +4,57 @@
 
 {% block after_field_sets %}
 
-    <div class="chart-container" style="display: flex">
-        <div id="quantity" style="width: 50vw">
+    <div class="chart-container" style="display: flex; flex-direction: column;">
+        <div id="quantity" style="width: 66vw">
             <canvas id="quantityChart"></canvas>
         </div>
 
-        <div id="price" style="width: 50vw">
+        <div id="price" style="width: 66vw">
             <canvas id="priceChart"></canvas>
         </div>
 
-        <div id="sell" style="width: 50vw">
-            <canvas id="sellChart"></canvas>
+        <div id="sale" style="width: 66vw">
+            <canvas id="saleChart"></canvas>
+        </div>
+
+        <div id="sellers" style="width: 66vw">
+            <canvas id="sellerChart"></canvas>
         </div>
     </div>
     <script type="text/javascript" src="{% static "chart/js/Chart.min.js" %}"></script>
     <script type="text/javascript">
+        var randomColorGenerator = function (s) {
+            for(var i = 0, h = 0; i < s.length; i++)
+                h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+            return '#' + (h.toString(16) + '0000000').slice(2, 8); 
+        };
         var qctx = document.getElementById('quantityChart').getContext("2d");
         var pctx = document.getElementById('priceChart').getContext("2d");
-        var sctx = document.getElementById('sellChart').getContext("2d");
+        var sctx = document.getElementById('saleChart').getContext("2d");
+        var sectx = document.getElementById('sellerChart').getContext("2d");
+
         var qchart = new Chart(qctx, {
             type: 'line', 
             data: {
-                labels:[{% for d in date %}'{{ d }}',{% endfor %}],
-                datasets: [{
-                    label:'Quantity',
-                    data: [{% for q in quantity %}{{ q }},{% endfor %}],
-                    backgroundColor: 'rgba(46, 138, 138, 1)'
-                }],
+                labels:[{% for d in bunch.0.item.date %}'{{ d }}',{% endfor %}],
+                datasets: [
+                    {% for b in bunch %}
+                    {
+                        label:'{{ b.seller.name }}',
+                        steppedLine: true,
+                        data: [{% for q in b.item.quantity %}{{ q }},{% endfor %}],
+                        borderColor: randomColorGenerator('{{ b.seller.name }}'),
+                        backgroundColor: randomColorGenerator('{{ b.seller.name }}'),
+                        fill: false,
+                    },
+                    {% endfor %}
+                ],
             },
             options: {
+                title: {
+                    display: true,
+                    text: '{% trans 'Quantity' %}',
+                },
                 scales: {
                     yAxes: [{
                         display: true,
@@ -47,26 +69,47 @@
         var pchart = new Chart(pctx, {
             type: 'line', 
             data: {
-                labels:[{% for d in date %}'{{ d }}',{% endfor %}],
-                datasets: [{
-                    label:'Price',
-                    data: [{% for p in price %}{{ p }},{% endfor %}],
-                    backgroundColor: 'rgba(103, 210, 150, 1)'
-                }]
-            }
+                labels:[{% for d in bunch.0.item.date %}'{{ d }}',{% endfor %}],
+                datasets: [
+                    {% for b in bunch %}
+                    {
+                        label:'{{ b.seller.name }}',
+                        data: [{% for p in b.item.price %}{{ p }},{% endfor %}],
+                        borderColor: randomColorGenerator('{{ b.seller.name }}'),
+                        backgroundColor: randomColorGenerator('{{ b.seller.name }}'),
+                        fill: false,
+                    },
+                    {% endfor %}
+                ],
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: '{% trans 'Price' %}',
+                },
+            },
         });
 
         var schart = new Chart(sctx, {
             type: 'bar', 
             data: {
-                labels:[{% for d in date %}'{{ d }}',{% endfor %}],
-                datasets: [{
-                    label:'Sell',
-                    data: [{% for s in sell %}{{ s }},{% endfor %}],
-                    backgroundColor: 'rgba(53, 110, 222, 1)',
-                }]
+                labels:[{% for d in bunch.0.item.date %}'{{ d }}',{% endfor %}],
+                datasets: [
+                    {% for b in bunch %}
+                    {
+                        label:'{{ b.seller.name }}',
+                        data: [{% for s in b.item.sale %}{{ s }},{% endfor %}],
+                        backgroundColor: randomColorGenerator('{{ b.seller.name }}'),
+                        fill: false,
+                    },
+                    {% endfor %}
+                ],
             },
             options: {
+                title: {
+                    display: true,
+                    text: '{% trans 'Sale' %}',
+                },
                 scales: {
                     yAxes: [{
                         display: true,
@@ -78,6 +121,24 @@
                 }
             }
         });
-
+    
+        var sechart = new Chart(sectx, {
+            type: 'pie',
+            data: {
+                datasets: [
+                    {
+                        data:[{% for b in bunch %}{{ b.item.total.buybox }}{% endfor %}],
+                        backgroundColor: [{% for b in bunch %}randomColorGenerator('{{ b.seller.name }}'),{% endfor %}],
+                    }
+                ],
+                labels: [{% for b in bunch %}'{{ b.seller.name }}',{% endfor %}],
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: '{% trans 'Buybox Date' %}',
+                },
+            }
+        });
     </script>
 {% endblock %}

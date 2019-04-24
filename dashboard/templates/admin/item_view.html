@@ -27,12 +27,15 @@
             data: {
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
-                    label:'Quantity',
                     data: [{% for q in quantity %}{{ q }},{% endfor %}],
                     backgroundColor: 'rgba(46, 138, 138, 1)'
                 }],
             },
             options: {
+                title: {
+                    display: true,
+                    text: {% trans 'Quantity' %},
+                },
                 scales: {
                     yAxes: [{
                         display: true,
@@ -49,10 +52,15 @@
             data: {
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
-                    label:'Price',
                     data: [{% for p in price %}{{ p }},{% endfor %}],
                     backgroundColor: 'rgba(103, 210, 150, 1)'
                 }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: {% trans 'Price' %},
+                },
             }
         });
 
@@ -61,12 +69,15 @@
             data: {
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
-                    label:'Sell',
-                    data: [{% for s in sell %}{{ s }},{% endfor %}],
+                    data: [{% for s in sale %}{{ s }},{% endfor %}],
                     backgroundColor: 'rgba(53, 110, 222, 1)',
                 }]
             },
             options: {
+                title: {
+                    display: true,
+                    text: {% trans 'Sale' %},
+                },
                 scales: {
                     yAxes: [{
                         display: true,

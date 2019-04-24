@@ -50,9 +50,10 @@ class Item(models.Model):
         date = [d[0].strftime('%Y-%m-%d') for d in ds]
         quantity = [d[1] for d in ds]
         price = [d[2] for d in ds]
-        sell = [d[3] for d in ds]
+        sale = [d[3] for d in ds]
         buybox = [d[4] for d in ds]
-        return dict(date=date, price=price, sell=sell, quantity=quantity, buybox=buybox)
+        total = {'buybox': sum(buybox), 'sale': sum(sale)}
+        return dict(date=date, price=price, sale=sale, quantity=quantity, buybox=buybox, total=total)
 
 
 @architect.install('partition', type='range', subtype='integer', constraint='10000', column='item_id')

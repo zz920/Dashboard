@@ -17,7 +17,6 @@ class Migration(migrations.Migration):
             options={
                 'proxy': True,
                 'indexes': [],
-                'constraints': [],
             },
             bases=('souq.item',),
         ),
