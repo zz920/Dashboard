@@ -27,8 +27,9 @@
             data: {
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
+                    label: '',
                     data: [{% for q in quantity %}{{ q }},{% endfor %}],
-                    backgroundColor: 'rgba(46, 138, 138, 1)'
+                    backgroundColor: 'rgba(46, 138, 138, 1)',
                 }],
             },
             options: {
@@ -52,6 +53,7 @@
             data: {
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
+                    label: '',
                     data: [{% for p in price %}{{ p }},{% endfor %}],
                     backgroundColor: 'rgba(103, 210, 150, 1)'
                 }]
@@ -69,6 +71,7 @@
             data: {
                 labels:[{% for d in date %}'{{ d }}',{% endfor %}],
                 datasets: [{
+                    label: '',
                     data: [{% for s in sale %}{{ s }},{% endfor %}],
                     backgroundColor: 'rgba(53, 110, 222, 1)',
                 }]
