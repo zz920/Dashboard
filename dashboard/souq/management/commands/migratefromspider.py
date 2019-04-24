@@ -35,7 +35,7 @@ class Command(BaseCommand):
             if getattr(obj, uk) not in uk_set:
                 create_list.append(model(**data))
         if create_list:
-            model.objects.bulk_create(create_list, ignore_conflicts=False)
+            model.objects.bulk_create(create_list)
         if len(create_list):
             print("{} Objects / {}".format(repr(model), len(create_list)))
 
