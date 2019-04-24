@@ -23,7 +23,7 @@ class HotSellerAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         if request.user.is_superuser:
-            return super(HotCategoryAdmin, self).change_view(
+            return super(HotSellerAdmin, self).change_view(
                 request,
                 object_id,
                 form_url,
