@@ -1,6 +1,5 @@
 import architect
-from djongo import models
-from django import forms
+from django.db import models
 from collections import deque
 
 from souq.models_content.seller import Seller

@@ -1,4 +1,4 @@
-from djongo import models
+from django.db import models
 
 
 class Seller(models.Model):
@@ -8,8 +8,3 @@ class Seller(models.Model):
 
     def __str__(self):
         return self.name
-
-    def get_hot_items(self, limit=30):
-        items = [t for t in self.item_set.all()]
-
-
