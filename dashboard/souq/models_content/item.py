@@ -67,7 +67,7 @@ class Item(models.Model):
         price = [d[2] for d in ds]
         sale = [d[3] for d in ds]
         buybox = [d[4] for d in ds]
-        total = {'buybox': sum(buybox), 'sale': sum(sale)}
+        total = {'buybox': sum([1 for _ in buybox if _]), 'sale': sum([_ for _ in sale if _])}
         return dict(date=date, price=price, sale=sale, quantity=quantity, buybox=buybox, total=total)
 
 
