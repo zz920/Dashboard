@@ -2,7 +2,7 @@ from urllib import parse
 from datetime import datetime, timedelta
 from django.shortcuts import redirect
 from django.contrib import admin
-from django.db.models import Max, Sum, Q, V
+from django.db.models import Max, Sum, Q, Value
 from django.db.models.functions import Coalesce
 from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
@@ -28,7 +28,7 @@ class HotItemChangeList(ChangeList):
                 field, id = tuple(param[0].split('='))
                 filter_query = {field + '__id': id}
     
-        qs = qs.filter(**filter_query).annotate(sum_value=Coalesce(sum_sales, V(0))).order_by('-sum_value')
+        qs = qs.filter(**filter_query).annotate(sum_value=Coalesce(sum_sales, Value(0))).order_by('-sum_value')
         return qs[:self.LIMIT]
 
 
