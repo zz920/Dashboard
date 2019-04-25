@@ -60,14 +60,14 @@ class Item(models.Model):
                 else:
                     ds.append((d, None, None, None, None))
         else:
-            ds = [_ for _ in self.detail_set.order_by('created').values_list('created', 'quantity', 'price', 'sales', 'buybox').all()]
+            ds = [d for d in self.detail_set.order_by('created').values_list('created', 'quantity', 'price', 'sales', 'buybox').all()]
         ds.sort(key=lambda x: x[0])
         date = [d[0].strftime('%Y-%m-%d') for d in ds]
         quantity = [d[1] for d in ds]
         price = [d[2] for d in ds]
         sale = [d[3] for d in ds]
         buybox = [d[4] for d in ds]
-        total = {'buybox': sum([1 for _ in buybox if _]), 'sale': sum([_ for _ in sale if _])}
+        total = {'buybox': sum([1 for b in buybox if b]), 'sale': sum([s for s in sale if s])}
         return dict(date=date, price=price, sale=sale, quantity=quantity, buybox=buybox, total=total)
 
 

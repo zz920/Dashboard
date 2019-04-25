@@ -54,6 +54,7 @@
                     display: true,
                     text: '{% trans 'Quantity' %}',
                 },
+                spanGaps: true,
                 scales: {
                     yAxes: [{
                         display: true,
@@ -73,7 +74,7 @@
                     {% for b in bunch %}
                     {
                         label:'{{ b.seller.name }}',
-                        data: [{% for p in b.item.price %}{{ p }},{% endfor %}],
+                        data: [{% for p in b.item.price %}{{ p|default_if_none:"" }},{% endfor %}],
                         borderColor: randomColorGenerator('{{ b.seller.name }}'),
                         backgroundColor: randomColorGenerator('{{ b.seller.name }}'),
                         fill: false,
@@ -86,6 +87,7 @@
                     display: true,
                     text: '{% trans 'Price' %}',
                 },
+                spanGaps: true,
             },
         });
 
@@ -97,7 +99,7 @@
                     {% for b in bunch %}
                     {
                         label:'{{ b.seller.name }}',
-                        data: [{% for s in b.item.sale %}{{ s }},{% endfor %}],
+                        data: [{% for s in b.item.sale %}{{ s|default_if_none:"" }},{% endfor %}],
                         backgroundColor: randomColorGenerator('{{ b.seller.name }}'),
                         fill: false,
                     },
@@ -126,7 +128,7 @@
             data: {
                 datasets: [
                     {
-                        data:[{% for b in bunch %}{{ b.item.total.buybox }}{% endfor %}],
+                        data:[{% for b in bunch %}{{ b.item.total.buybox|default_if_none:"" }}{% endfor %}],
                         backgroundColor: [{% for b in bunch %}randomColorGenerator('{{ b.seller.name }}'),{% endfor %}],
                     }
                 ],
