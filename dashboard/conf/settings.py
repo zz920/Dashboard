@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'rest_framework',
     'registration',
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'user',
     'main_dashboard',
     'common',
+    'common.apps.DashboardAdminConfig',
 ]
 
 MIDDLEWARE = [

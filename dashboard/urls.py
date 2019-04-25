@@ -5,10 +5,8 @@ from django.urls import path
 from django.urls.conf import include, re_path
 from rest_framework import renderers
 
-from common.apps import DashboardAdminSite
 from conf import settings
 
-admin.site = DashboardAdminSite()
 
 urlpatterns = [
                     re_path(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
