@@ -128,7 +128,7 @@
             data: {
                 datasets: [
                     {
-                        data:[{% for b in bunch %}{{ b.item.total.buybox|default_if_none:"" }}{% endfor %}],
+                        data:[{% for b in bunch %}{{ b.item.total.buybox }},{% endfor %}],
                         backgroundColor: [{% for b in bunch %}randomColorGenerator('{{ b.seller.name }}'),{% endfor %}],
                     }
                 ],
