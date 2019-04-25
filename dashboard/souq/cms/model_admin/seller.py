@@ -21,24 +21,6 @@ class HotSellerAdmin(admin.ModelAdmin):
         return mark_safe('<a href="/souq/hotitem/?seller={}">Check hot item</a>'.format(instance.id))
     hot_items.short_description = "hot items"
 
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        if request.user.is_superuser:
-            return super(HotSellerAdmin, self).change_view(
-                request,
-                object_id,
-                form_url,
-                extra_context
-            )
-        else:
-            from django.urls import reverse
-            from django.http import HttpResponseRedirect
-            opts = self.model._meta
-            url = reverse('admin:{app}_{model}_changelist'.format(
-                app=opts.app_label,
-                model=opts.model_name,
-            ))
-            return HttpResponseRedirect(url)
-
     def has_add_permission(self, request, obj=None):
         return False
 

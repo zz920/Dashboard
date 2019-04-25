@@ -5,14 +5,10 @@ from django.urls import path
 from django.urls.conf import include, re_path
 from rest_framework import renderers
 
+from common.apps import DashboardAdminSite
 from conf import settings
 
-'''
-class AccessUser:
-    has_module_perms = has_perm = __getattr__ = lambda s,*a,**kw: True
-
-admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
-'''
+admin.site = DashboardAdminSite()
 
 urlpatterns = [
                     re_path(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
@@ -20,8 +16,6 @@ urlpatterns = [
                     re_path(r'^accounts/', include('registration.backends.default.urls')),
                     path('', admin.site.urls),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-
 
 admin.site.site_header = _("Panda Dashboard")
 admin.site.site_title = _("Panda Dashboard")
