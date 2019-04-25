@@ -41,7 +41,7 @@
                     {% for b in bunch %}
                     {
                         label:'{{ b.seller.name }}',
-                        data: [{% for q in b.item.quantity %}{{ q }},{% endfor %}],
+                        data: [{% for q in b.item.quantity %}{{ q|default_if_none:"" }},{% endfor %}],
                         borderColor: randomColorGenerator('{{ b.seller.name }}'),
                         backgroundColor: randomColorGenerator('{{ b.seller.name }}'),
                         fill: false,

@@ -1,6 +1,7 @@
 import architect
 from djongo import models
 from django import forms
+from collections import deque
 
 from souq.models_content.seller import Seller
 from souq.models_content.category import Category
@@ -44,8 +45,22 @@ class Item(models.Model):
     5. search by the seller.
     """
 
-    def get_detail_list(self):
-        ds = [(d.created, d.quantity, d.price, d.sales, d.buybox) for d in self.detail_set.all()]
+    def get_detail_list(self, date=None):
+        if date:
+            qs = deque(self.detail_set.filter(created__gte=date[0], created__lte=date[-1]).order_by('created').values_list('created', 'quantity', 'price', 'sales', 'buybox').all())
+            ds = []
+            for d in date:
+                if qs:
+                    if d > qs[0][0]:
+                        qs.popleft()
+                    elif d < qs[0][0]:
+                        ds.append((d, None, None, None, None))
+                    else:
+                        ds.append(qs.popleft())
+                else:
+                    ds.append((d, None, None, None, None))
+        else:
+            ds = [_ for _ in self.detail_set.order_by('created').values_list('created', 'quantity', 'price', 'sales', 'buybox').all()]
         ds.sort(key=lambda x: x[0])
         date = [d[0].strftime('%Y-%m-%d') for d in ds]
         quantity = [d[1] for d in ds]

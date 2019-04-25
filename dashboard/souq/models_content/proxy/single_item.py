@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta 
 from django.utils.safestring import mark_safe
 from souq.models_content.item import Item
 
@@ -27,9 +28,10 @@ class SingleItem(Item):
             return {}
 
         bunch_data = []
+        date = [d for d in (datetime.now().date() - timedelta(n) for n in range(7, 0, -1))]
         for item in bunch:
             seller_data = {'name': item.seller.name, 'link': item.seller.link}
-            item_data = item.get_detail_list()
+            item_data = item.get_detail_list(date)
             bunch_data.append({'seller': seller_data, 'item': item_data})
         return {'bunch': bunch_data}
 
