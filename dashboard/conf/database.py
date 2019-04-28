@@ -12,16 +12,44 @@ DATABASES = {
         'HOST': getenv('DEFAULT_DATABASE_HOST'),
         'PORT': getenv('DEFAULT_DATABASE_PORT', type=int),
     },
-    'souq': {
+    'psql_souq_uae': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': getenv('PSQL_SOUQ_UAE_DATABASE_NAME'),
+        'USER': getenv('PSQL_SOUQ_UAE_DATABASE_USERNAME'),
+        'PASSWORD': getenv('PSQL_SOUQ_UAE_DATABASE_PASSWORD'),
+        'HOST': getenv('PSQL_SOUQ_UAE_DATABASE_HOST'),
+        'PORT': getenv('PSQL_SOUQ_UAE_DATABASE_PORT', type=int),
+    },
+    'psql_souq_ksa': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': getenv('PSQL_SOUQ_KSA_DATABASE_NAME'),
+        'USER': getenv('PSQL_SOUQ_KSA_DATABASE_USERNAME'),
+        'PASSWORD': getenv('PSQL_SOUQ_KSA_DATABASE_PASSWORD'),
+        'HOST': getenv('PSQL_SOUQ_KSA_DATABASE_HOST'),
+        'PORT': getenv('PSQL_SOUQ_KSA_DATABASE_PORT', type=int),
+    },
+    # remote
+    'mongo_souq_uae': {
         'ENGINE': 'djongo',
-        'NAME': getenv('SOUQ_DATABASE_NAME'),
-        'USER': getenv('SOUQ_DATABASE_USERNAME'),
-        'PASSWORD': getenv('SOUQ_DATABASE_PASSWORD'),
-        'HOST': getenv('SOUQ_DATABASE_HOST'),
-        'PORT': getenv('SOUQ_DATABASE_PORT', type=int),
-        'AUTH_SOURCE': getenv('SOUQ_DATABASE_NAME'),
+        'NAME': getenv('MONGO_SOUQ_UAE_DATABASE_NAME'),
+        'USER': getenv('MONGO_SOUQ_UAE_DATABASE_USERNAME'),
+        'PASSWORD': getenv('MONGO_SOUQ_UAE_DATABASE_PASSWORD'),
+        'HOST': getenv('MONGO_SOUQ_UAE_DATABASE_HOST'),
+        'PORT': getenv('MONGO_SOUQ_UAE_DATABASE_PORT', type=int),
+        'AUTH_SOURCE': getenv('MONGO_SOUQ_UAE_DATABASE_NAME'),
         'ENFORCE_SCHEMA': False,
-    }
+    },
+    # remote
+    'mongo_souq_ksa': {
+        'ENGINE': 'djongo',
+        'NAME': getenv('MONGO_SOUQ_KSA_DATABASE_NAME'),
+        'USER': getenv('MONGO_SOUQ_KSA_DATABASE_USERNAME'),
+        'PASSWORD': getenv('MONGO_SOUQ_KSA_DATABASE_PASSWORD'),
+        'HOST': getenv('MONGO_SOUQ_KSA_DATABASE_HOST'),
+        'PORT': getenv('MONGO_SOUQ_KSA_DATABASE_PORT', type=int),
+        'AUTH_SOURCE': getenv('MONGO_SOUQ_KSA_DATABASE_NAME'),
+        'ENFORCE_SCHEMA': False,
+    },
 }
 
 DATABASE_ROUTERS = ('dbrouter.CustomDBRouter', )
