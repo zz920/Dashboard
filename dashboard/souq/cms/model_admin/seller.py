@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 
 class HotSellerAdmin(admin.ModelAdmin):
 
+    fields = ('name', 'short_link', 'total_sales', 'check_hot_items', 'related_category', )
     list_display = ('name', 'hot_items')
     search_fields = ['name',]
 
