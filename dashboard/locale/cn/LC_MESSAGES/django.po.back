@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-20 09:14-0700\n"
+"POT-Creation-Date: 2019-04-24 11:41-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,51 +17,74 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: conf/jet.py:11
+#: dashboard/conf/jet.py:11
 msgid "USER MANAGEMENT"
 msgstr "用户管理"
 
-#: conf/jet.py:12
+#: dashboard/conf/jet.py:12
 msgid "USER ACCOUNTS MANAGEMENT"
 msgstr "帐户管理"
 
-#: conf/jet.py:13
+#: dashboard/conf/jet.py:13
 msgid "GROUP PERMISSION MANAGEMENT"
 msgstr "用户组管理"
 
-#: conf/jet.py:15
+#: dashboard/conf/jet.py:15
 msgid "ITEM MANAGEMENT"
 msgstr "商品管理"
 
-#: conf/jet.py:16
+#: dashboard/conf/jet.py:16
 msgid "COMMON ITEM VIEW"
 msgstr "浏览全部商品"
 
-#: conf/jet.py:17
+#: dashboard/conf/jet.py:17
 msgid "HOT ITEMS BY CATEGORY"
 msgstr "根据分类浏览热门商品"
 
-#: conf/jet.py:18
+#: dashboard/conf/jet.py:18
 msgid "HOT ITEMS BY SELLER"
 msgstr "根据商户浏览热门商品"
 
-#: main_dashboard/index.py:22
+#: dashboard/conf/jet.py:19
+msgid "SINGLE ITEMS ANALYSIS"
+msgstr "单品分析"
+
+#: dashboard/main_dashboard/index.py:22
 msgid "Announcement"
 msgstr "公告"
 
-#: templates/admin/news_list.html:19
+#: dashboard/templates/admin/item_view.html:37
+#: dashboard/templates/admin/single_item_view.html:56
+msgid "Quantity"
+msgstr "库存数量"
+
+#: dashboard/templates/admin/item_view.html:62
+#: dashboard/templates/admin/single_item_view.html:88
+msgid "Price"
+msgstr "价格变动"
+
+#: dashboard/templates/admin/item_view.html:79
+#: dashboard/templates/admin/single_item_view.html:111
+msgid "Sale"
+msgstr "销量变动"
+
+#: dashboard/templates/admin/news_list.html:19
 msgid "It's Empty"
 msgstr "空"
 
-#: templates/admin/view.html:6
+#: dashboard/templates/admin/single_item_view.html:139
+msgid "Buybox Date"
+msgstr "购物车天数"
+
+#: dashboard/templates/admin/view.html:6
 msgid "Back to list"
 msgstr "返回"
 
-#: urls.py:26 urls.py:27
+#: dashboard/urls.py:26 dashboard/urls.py:27
 msgid "Panda Dashboard"
 msgstr "展鸿数据"
 
-#: urls.py:28
+#: dashboard/urls.py:28
 msgid "Welcome to Panda Dashboard"
 msgstr "欢迎使用展鸿数据服务"
 
@@ -103,10 +126,6 @@ msgstr "应用名称"
 
 #: jet/models.py:30
 msgid "pinned application"
-msgstr "固定应用"
-
-#: jet/models.py:31
-msgid "pinned applications"
 msgstr "固定应用"
 
 #: jet/templates/admin/base.html:53

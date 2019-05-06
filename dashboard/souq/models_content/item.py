@@ -5,20 +5,22 @@ from collections import deque
 from souq.models_content.seller import Seller
 from souq.models_content.category import Category
 
+from django.utils.translation import gettext_lazy as _
+
 
 class Item(models.Model):
 
-    name = models.CharField(max_length=1000)
-    img_link = models.CharField(max_length=1000, null=True, blank=True)
-    link = models.CharField(max_length=1000)
+    name = models.CharField(_('item name'), max_length=1000)
+    img_link = models.CharField(_('image link'), max_length=1000, null=True, blank=True)
+    link = models.CharField(_('item link'), max_length=1000)
 
-    plantform = models.CharField(max_length=20)
+    plantform = models.CharField(_('plantform'), max_length=20)
 
-    brand = models.CharField(max_length=50, null=True, blank=True)
-    ean_code = models.CharField(max_length=50)
-    trace_id = models.CharField(max_length=30)
-    unit_id = models.CharField(max_length=30, unique=True)
-    description = models.CharField(max_length=1000)
+    brand = models.CharField(_('brand'), max_length=50, null=True, blank=True)
+    ean_code = models.CharField(_('EAN'), max_length=50)
+    trace_id = models.CharField(_('item id'), max_length=30)
+    unit_id = models.CharField(_('unit id'), max_length=30, unique=True)
+    description = models.CharField(_('description'), max_length=1000)
 
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
@@ -35,6 +37,8 @@ class Item(models.Model):
             models.Index(fields=['unit_id']),
             models.Index(fields=['trace_id']),
         ]
+        verbose_name = 'item'
+        verbose_name_plural = 'items'
     """
     Consider the use case here:
     1. search by the ean_code.
