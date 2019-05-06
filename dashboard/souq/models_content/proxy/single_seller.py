@@ -10,7 +10,6 @@ from souq.models_content.item import Item, Detail
 
 class SingleSeller(Seller):
 
-    @property
     def total_sales(self):
         day_limit = datetime.now() - timedelta(days=7)
         sum_value = Sum(F('sales')*F('price'), output_field=FloatField())
@@ -20,7 +19,6 @@ class SingleSeller(Seller):
         return "{} AED in last 7 days".format(total)
     total_sales.short_description = _("Total Sales")
 
-    @property
     def related_category(self):
         category = Counter(self.item_set.values_list('category__id', 'category__name'))
         context = []
@@ -32,12 +30,10 @@ class SingleSeller(Seller):
         return mark_safe("<br>".join(context)) or "Empty"
     related_category.short_description = _("Related Category")
 
-    @property
     def check_hot_items(self):
         return mark_safe('<a href="/souq/hotitem/?seller={}">Check hot item</a>'.format(self.id))
     check_hot_items.short_description = _("Check hot items")
 
-    @property
     def short_link(self):
         return mark_safe('<a href="{}">Seller Link</a>'.format(self.link))
     short_link.short_description = _("Short Link")
