@@ -1,5 +1,6 @@
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
 from souq.models_content.item import Item
 
 
@@ -10,10 +11,12 @@ class SingleItem(Item):
         if self.img_link:
             return mark_safe('<img src="{}">'.format(self.img_link))
         return mark_safe('<img src="" height="40" width="40">')
+    product_img.short_description = _("Product Image")
 
     @property
     def short_link(self):
         return mark_safe('<a href="{}">Production Link</a>'.format(self.link))
+    short_link.short_description = _("Short Link")
 
     @classmethod
     def get_group_detail_list(cls, id):

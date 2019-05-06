@@ -6,6 +6,7 @@ from django.db.models import Max, Sum, Q, Value
 from django.db.models.functions import Coalesce
 from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
+from django.utils.translation import gettext_lazy as _
 
 
 class HotItemChangeList(ChangeList):
@@ -13,7 +14,7 @@ class HotItemChangeList(ChangeList):
 
     def get_queryset(self, request, **kwargs):
         qs = super().get_queryset(request, **kwargs)
-        day_limit = datetime.now() - timedelta(days=5) 
+        day_limit = datetime.now() - timedelta(days=5)
         sum_sales = Sum('detail__sales', filter=Q(detail__created__gte=day_limit))
 
         filter_query = {}
@@ -27,7 +28,7 @@ class HotItemChangeList(ChangeList):
             if param and param[0]:
                 field, id = tuple(param[0].split('='))
                 filter_query = {field + '__id': id}
-    
+
         qs = qs.filter(**filter_query).annotate(sum_value=Coalesce(sum_sales, Value(0))).order_by('-sum_value')
         return qs[:self.LIMIT]
 
@@ -48,6 +49,7 @@ class HotItemProxyAdmin(admin.ModelAdmin):
         if instance.img_link:
             return mark_safe('<img src="{}" height="60" width="40">'.format(instance.img_link))
         return mark_safe('<img src="" height="60" width="40">')
+    product_img.short_description = _('Product Image')
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}

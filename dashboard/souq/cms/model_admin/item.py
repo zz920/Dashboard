@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
+from django.utils.translation import gettext_lazy as _
 
 
 class ItemChangeList(ChangeList):
@@ -30,6 +31,7 @@ class ItemProxyAdmin(admin.ModelAdmin):
         if instance.img_link:
             return mark_safe('<img src="{}" height="60" width="40">'.format(instance.img_link))
         return mark_safe('<img src="" height="60" width="40">')
+    product_img.short_description = _('Product Image')
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}

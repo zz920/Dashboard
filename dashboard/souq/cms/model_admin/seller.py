@@ -1,6 +1,6 @@
 from django.contrib import admin
-
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
 
 
 class HotSellerAdmin(admin.ModelAdmin):
@@ -20,7 +20,7 @@ class HotSellerAdmin(admin.ModelAdmin):
 
     def hot_items(self, instance):
         return mark_safe('<a href="/souq/hotitem/?seller={}">Check hot item</a>'.format(instance.id))
-    hot_items.short_description = "hot items"
+    hot_items.short_description = _("Hot Items in last 5 days")
 
     def has_add_permission(self, request, obj=None):
         return False
