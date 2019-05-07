@@ -7,3 +7,4 @@ class HotItem(Item):
     class Meta:
         proxy = True
         verbose_name = _('Hot Item')
+        verbose_name_plural = _('Hot Item')
