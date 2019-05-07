@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from common.models_content.base_model import BaseModel
 
@@ -27,7 +28,8 @@ class User(AbstractUser, BaseModel):
 
     class Meta:
         db_table = 'users'
-        verbose_name_plural = 'users'
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
 
     @classmethod
     def get_user_by_email(cls, email):

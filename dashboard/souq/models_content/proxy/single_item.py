@@ -38,3 +38,4 @@ class SingleItem(Item):
 
     class Meta:
         proxy = True
+        verbose_name = _('single item')

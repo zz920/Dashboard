@@ -40,3 +40,4 @@ class SingleSeller(Seller):
 
     class Meta:
         proxy = True
+        verbose_name = _('seller')

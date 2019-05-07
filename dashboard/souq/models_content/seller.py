@@ -11,5 +11,5 @@ class Seller(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'seller'
-        verbose_name_plural = 'sellers'
+        verbose_name = _('seller')
+        verbose_name_plural = _('sellers')

@@ -15,6 +15,7 @@ class ItemChangeList(ChangeList):
         return qs[:self.LIMIT]
     """
 
+
 class ItemProxyAdmin(admin.ModelAdmin):
 
     list_display = ('product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')

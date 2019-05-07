@@ -37,8 +37,8 @@ class Item(models.Model):
             models.Index(fields=['unit_id']),
             models.Index(fields=['trace_id']),
         ]
-        verbose_name = 'item'
-        verbose_name_plural = 'items'
+        verbose_name = _('item')
+        verbose_name_plural = _('items')
     """
     Consider the use case here:
     1. search by the ean_code.

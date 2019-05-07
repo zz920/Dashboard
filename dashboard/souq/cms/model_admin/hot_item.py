@@ -30,17 +30,21 @@ class HotItemChangeList(ChangeList):
                 filter_query = {field + '__id': id}
 
         qs = qs.filter(**filter_query).annotate(sum_value=Coalesce(sum_sales, Value(0))).order_by('-sum_value')
-        return qs[:self.LIMIT]
+        return qs
 
 
 class HotItemProxyAdmin(admin.ModelAdmin):
 
-    list_display = ('product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
+    list_display = ('sale_5_day', 'product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
     exclude = ('img_link', 'seller', 'detail')
     list_per_page = 10
     view_on_site = True
 
     change_form_template = 'admin/item_view.html'
+
+    def sale_5_day(self, instance):
+        return instance.sum_value
+    sale_5_day.short_description = _("Sales in 5 days")
 
     def get_changelist(self, request, **kwargs):
         return HotItemChangeList
