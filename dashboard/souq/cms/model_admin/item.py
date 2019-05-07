@@ -9,10 +9,11 @@ class ItemChangeList(ChangeList):
 
     LIMIT = 100
 
+    """
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
         return qs[:self.LIMIT]
-
+    """
 
 class ItemProxyAdmin(admin.ModelAdmin):
 
