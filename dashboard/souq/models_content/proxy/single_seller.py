@@ -40,4 +40,5 @@ class SingleSeller(Seller):
 
     class Meta:
         proxy = True
-        verbose_name = _('seller')
+        verbose_name = _('single seller')
+        verbose_name_plural = _('single seller')

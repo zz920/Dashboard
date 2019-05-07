@@ -6,4 +6,5 @@ class SingleCategory(Category):
     
     class Meta:
         proxy = True
-        verbose_name = _('Category')
+        verbose_name = _('single category')
+        verbose_name_plural = _('single category')
