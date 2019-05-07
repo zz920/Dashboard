@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+{% load static i18n %}
+
+{% block extrahead %}<link rel="shortcut icon" type="image/png" href="{% static "logo/logo.ico" %}"/>{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            <img style="background-color: grey" src="{% static "logo/logo.png" %}" alt="Panda Data" height="50%" width="50%">
+        </a>
+    </h1>
+{% endblock %}
