@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-07 17:35+0400\n"
+"POT-Creation-Date: 2019-05-07 11:16-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,6 +132,7 @@ msgid "items"
 msgstr "商品"
 
 #: dashboard/souq/models_content/proxy/hot_item.py:9
+#: dashboard/souq/models_content/proxy/hot_item.py:10
 msgid "Hot Item"
 msgstr "热门商品"
 
@@ -205,6 +206,34 @@ msgstr "空"
 #: dashboard/templates/admin/single_item_view.html:140
 msgid "Buybox Date"
 msgstr "购物车天数"
+
+#: dashboard/templates/admin/submit_line.html:5
+msgid "Save"
+msgstr ""
+
+#: dashboard/templates/admin/submit_line.html:8
+msgid "Delete"
+msgstr "删除"
+
+#: dashboard/templates/admin/submit_line.html:10
+msgid "Save as new"
+msgstr ""
+
+#: dashboard/templates/admin/submit_line.html:11
+msgid "Save and add another"
+msgstr ""
+
+#: dashboard/templates/admin/submit_line.html:12
+msgid "Save and continue editing"
+msgstr ""
+
+#: dashboard/templates/admin/submit_line.html:12
+msgid "Save and view"
+msgstr ""
+
+#: dashboard/templates/admin/submit_line.html:13
+msgid "Return"
+msgstr "返回"
 
 #: dashboard/templates/admin/view.html:6
 msgid "Back to list"
@@ -955,9 +984,6 @@ msgstr[0] "请至少提交 %d 个表单。"
 
 msgid "Order"
 msgstr "排序"
-
-msgid "Delete"
-msgstr "删除"
 
 msgid "Please correct the duplicate data for %(field)s."
 msgstr "请修改%(field)s的重复数据"
