@@ -24,18 +24,18 @@ class SingleSeller(Seller):
         context = []
 
         for cat, num in category.most_common(5):
-            context.append('<a href="/souq/hotitem/?category={}">{} ({} items)</a>'.format(cat[0], cat[1], num))
+            context.append('<a href="/souq/hotitem/?category={}" target="_blank">{} ({} items)</a>'.format(cat[0], cat[1], num))
         if context:
             context.append('In Total {} Category.'.format(len(category)))
         return mark_safe("<br>".join(context)) or "Empty"
     related_category.short_description = _("Related Category")
 
     def check_hot_items(self):
-        return mark_safe('<a href="/souq/hotitem/?seller={}">Check hot item</a>'.format(self.id))
+        return mark_safe('<a href="/souq/hotitem/?seller={}" target="_blank">Check hot item</a>'.format(self.id))
     check_hot_items.short_description = _("Check hot items")
 
     def short_link(self):
-        return mark_safe('<a href="{}">Seller Link</a>'.format(self.link))
+        return mark_safe('<a href="{}" target="_blank">Seller Link</a>'.format(self.link))
     short_link.short_description = _("Short Link")
 
     class Meta:

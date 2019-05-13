@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
 
+from common.cms.mixin.view_only import ViewOnlyMixin
+
 
 class SingleItemChangeList(ChangeList):
 
@@ -13,7 +15,7 @@ class SingleItemChangeList(ChangeList):
         return qs.none()
 
 
-class SingleItemProxyAdmin(admin.ModelAdmin):
+class SingleItemProxyAdmin(admin.ModelAdmin, ViewOnlyMixin):
 
     list_display = ('product_img_small', 'name', 'link', 'ean_code', 'plantform', 'brand')
     fields = ('product_img', 'name', 'short_link', 'ean_code', 'plantform', 'brand')
@@ -37,11 +39,3 @@ class SingleItemProxyAdmin(admin.ModelAdmin):
         extra_context.update(**self.model.get_group_detail_list(id=object_id))
         return super().change_view(request, object_id, form_url, extra_context)
 
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False

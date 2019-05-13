@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from common.cms.mixin.view_only import ViewOnlyMixin
 
-class HotSellerAdmin(admin.ModelAdmin):
+
+class HotSellerAdmin(admin.ModelAdmin, ViewOnlyMixin):
 
     fields = ('name', 'short_link', 'total_sales', 'check_hot_items', 'related_category', )
     list_display = ('name', 'hot_items')
@@ -21,14 +23,5 @@ class HotSellerAdmin(admin.ModelAdmin):
     """
 
     def hot_items(self, instance):
-        return mark_safe('<a href="/souq/hotitem/?seller={}">Check hot item</a>'.format(instance.id))
+        return mark_safe('<a href="/souq/hotitem/?seller={}" target="_blank">Check hot item</a>'.format(instance.id))
     hot_items.short_description = _("Hot Items in last 5 days")
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False

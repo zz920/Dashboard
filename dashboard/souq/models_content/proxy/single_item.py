@@ -13,7 +13,7 @@ class SingleItem(Item):
     product_img.short_description = _("Product Image")
 
     def short_link(self):
-        return mark_safe('<a href="{}">Production Link</a>'.format(self.link))
+        return mark_safe('<a href="{}" target="_blank">Production Link</a>'.format(self.link))
     short_link.short_description = _("Short Link")
 
     @classmethod

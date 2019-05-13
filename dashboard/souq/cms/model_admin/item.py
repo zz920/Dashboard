@@ -4,21 +4,16 @@ from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
 from django.utils.translation import gettext_lazy as _
 
+from common.cms.mixin.view_only import ViewOnlyMixin
+
 
 class ItemChangeList(ChangeList):
-
-    LIMIT = 100
-
-    """
-    def get_queryset(self, *args, **kwargs):
-        qs = super().get_queryset(*args, **kwargs)
-        return qs[:self.LIMIT]
-    """
+    pass
 
 
-class ItemProxyAdmin(admin.ModelAdmin):
+class ItemProxyAdmin(admin.ModelAdmin, ViewOnlyMixin):
 
-    list_display = ('product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
+    list_display = ('product_img', 'name', 'ean_code', 'plantform', 'brand')
     exclude = ('img_link', 'category', 'seller', 'detail')
     search_fields = ['link__exact', 'ean_code__exact', 'brand', 'trace_id']
     list_per_page = 10
@@ -39,12 +34,3 @@ class ItemProxyAdmin(admin.ModelAdmin):
         extra_context = extra_context or {}
         extra_context.update(**self.model.objects.get(id=object_id).get_detail_list())
         return super().change_view(request, object_id, form_url, extra_context)
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False

@@ -8,6 +8,8 @@ from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
 from django.utils.translation import gettext_lazy as _
 
+from common.cms.mixin.view_only import ViewOnlyMixin
+
 
 class HotItemChangeList(ChangeList):
     LIMIT = 30
@@ -33,7 +35,7 @@ class HotItemChangeList(ChangeList):
         return qs
 
 
-class HotItemProxyAdmin(admin.ModelAdmin):
+class HotItemProxyAdmin(admin.ModelAdmin, ViewOnlyMixin):
 
     list_display = ('sale_5_day', 'product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
     exclude = ('img_link', 'seller', 'detail')
@@ -60,11 +62,3 @@ class HotItemProxyAdmin(admin.ModelAdmin):
         extra_context.update(**self.model.objects.get(id=object_id).get_detail_list())
         return super().change_view(request, object_id, form_url, extra_context)
 
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
