@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from common.cms.mixin.view_only import ViewOnlyMixin
 
 
-class HotSellerAdmin(admin.ModelAdmin, ViewOnlyMixin):
+class HotSellerAdmin(ViewOnlyMixin, admin.ModelAdmin):
 
     fields = ('name', 'short_link', 'total_sales', 'check_hot_items', 'related_category', )
     list_display = ('name', 'hot_items')

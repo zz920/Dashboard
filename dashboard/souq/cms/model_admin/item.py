@@ -1,6 +1,8 @@
 from django.shortcuts import redirect
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from django.db.models import Max, Sum, Q, F, Value, Count, Avg
+from django.db.models.functions import Coalesce
 from django.contrib.admin.views.main import ChangeList
 from django.utils.translation import gettext_lazy as _
 
@@ -8,12 +10,19 @@ from common.cms.mixin.view_only import ViewOnlyMixin
 
 
 class ItemChangeList(ChangeList):
-    pass
+    def get_queryset(self, request, **kwargs):
+        qs = super().get_queryset(request, **kwargs)
+        qs = qs.annotate(
+                seller_count=Count('trace_id'), 
+                total_sales=Coalesce(Sum('detail__sales'), Value(0)), 
+                avg_price=Avg('detail__price')
+        )
+        return qs
 
 
-class ItemProxyAdmin(admin.ModelAdmin, ViewOnlyMixin):
+class ItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
 
-    list_display = ('product_img', 'name', 'ean_code', 'plantform', 'brand')
+    list_display = ('product_img', 'name', 'price', 'seller_count', 'total_sales', 'ean_code', 'plantform', 'brand')
     exclude = ('img_link', 'category', 'seller', 'detail')
     search_fields = ['link__exact', 'ean_code__exact', 'brand', 'trace_id']
     list_per_page = 10
@@ -23,6 +32,26 @@ class ItemProxyAdmin(admin.ModelAdmin, ViewOnlyMixin):
 
     def get_changelist(self, request, **kwargs):
         return ItemChangeList
+
+    def get_sortable_by(self, request):
+        return {'name', 'seller_count', 'total_sales'}
+
+    def seller_count(self, instance):
+        return instance.seller_count
+    seller_count.short_description = _('Seller Count')
+    seller_count.admin_order_field = 'seller_count'
+
+    def price(self, instance):
+        if instance.avg_price:
+            return '%.2f' % instance.avg_price 
+        return _('Unknown')
+    price.short_description = _("Average Price")
+    price.admin_order_field = 'avg_price'
+
+    def total_sales(self, instance):
+        return instance.total_sales
+    total_sales.short_description = _('Total Sales')
+    total_sales.admin_order_field = 'total_sales'
 
     def product_img(self, instance):
         if instance.img_link:

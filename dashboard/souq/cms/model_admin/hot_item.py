@@ -2,7 +2,7 @@ from urllib import parse
 from datetime import datetime, timedelta
 from django.shortcuts import redirect
 from django.contrib import admin
-from django.db.models import Max, Sum, Q, Value
+from django.db.models import Max, Sum, Q, Value, Count
 from django.db.models.functions import Coalesce
 from django.utils.safestring import mark_safe
 from django.contrib.admin.views.main import ChangeList
@@ -12,7 +12,6 @@ from common.cms.mixin.view_only import ViewOnlyMixin
 
 
 class HotItemChangeList(ChangeList):
-    LIMIT = 30
 
     def get_queryset(self, request, **kwargs):
         qs = super().get_queryset(request, **kwargs)
@@ -31,13 +30,13 @@ class HotItemChangeList(ChangeList):
                 field, id = tuple(param[0].split('='))
                 filter_query = {field + '__id': id}
 
-        qs = qs.filter(**filter_query).annotate(sum_value=Coalesce(sum_sales, Value(0))).order_by('-sum_value')
+        qs = qs.annotate(seller_count=Count('trace_id')).filter(**filter_query).annotate(sum_value=Coalesce(sum_sales, Value(0)), ).order_by('-sum_value').prefetch_related('detail_set')
         return qs
 
 
-class HotItemProxyAdmin(admin.ModelAdmin, ViewOnlyMixin):
+class HotItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
 
-    list_display = ('sale_5_day', 'product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
+    list_display = ('sale_5_day', 'last_price', 'seller_number', 'product_img', 'name', 'link', 'ean_code', 'plantform', 'brand')
     exclude = ('img_link', 'seller', 'detail')
     list_per_page = 10
     view_on_site = True
@@ -45,8 +44,18 @@ class HotItemProxyAdmin(admin.ModelAdmin, ViewOnlyMixin):
     change_form_template = 'admin/item_view.html'
 
     def sale_5_day(self, instance):
-        return instance.sum_value
+        return instance.sum_value or 0
     sale_5_day.short_description = _("Sales in 5 days")
+    sale_5_day.admin_order_field = 'sum_sales'
+
+    def last_price(self, instance):
+        return instance.detail_set.latest('created').price
+    last_price.short_description = _("Last Price")
+
+    def seller_number(self, instance):
+        return instance.seller_count
+    seller_number.short_description = _("Seller Number")
+    seller_number.admin_order_field = 'seller_count'
 
     def get_changelist(self, request, **kwargs):
         return HotItemChangeList

@@ -15,7 +15,7 @@ class SingleItemChangeList(ChangeList):
         return qs.none()
 
 
-class SingleItemProxyAdmin(admin.ModelAdmin, ViewOnlyMixin):
+class SingleItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
 
     list_display = ('product_img_small', 'name', 'link', 'ean_code', 'plantform', 'brand')
     fields = ('product_img', 'name', 'short_link', 'ean_code', 'plantform', 'brand')

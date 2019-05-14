@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from common.cms.mixin.view_only import ViewOnlyMixin
 
 
-class HotCategoryAdmin(admin.ModelAdmin, ViewOnlyMixin):
+class HotCategoryAdmin(ViewOnlyMixin, admin.ModelAdmin):
 
     list_display = ('name', 'classification', 'hot_items')
     search_fields = ['name', 'classification', 'link']
