@@ -15,7 +15,7 @@ class ItemChangeList(ChangeList):
         qs = qs.annotate(
                 seller_count=Count('trace_id'), 
                 total_sales=Coalesce(Sum('detail__sales'), Value(0)), 
-                avg_price=Avg('detail__price')
+                # avg_price=Avg('detail__price')
         )
         return qs
 
@@ -42,11 +42,12 @@ class ItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
     seller_count.admin_order_field = 'seller_count'
 
     def price(self, instance):
-        if instance.avg_price:
-            return '%.2f' % instance.avg_price 
+        try:
+            return '%.2f' % instance.detail_set.latest('created').price
+        except Exception:
+            pass
         return _('Unknown')
     price.short_description = _("Average Price")
-    price.admin_order_field = 'avg_price'
 
     def total_sales(self, instance):
         return instance.total_sales
