@@ -23,7 +23,7 @@ msgstr "用户管理"
 
 #: dashboard/conf/jet.py:12
 msgid "USER INFO"
-msgstr ""
+msgstr "个人资料"
 
 #: dashboard/conf/jet.py:13
 msgid "USER ACCOUNTS MANAGEMENT"
