@@ -59,11 +59,11 @@ msgstr "5日内销量"
 
 #: dashboard/souq/cms/model_admin/hot_item.py:53
 msgid "Last Price"
-msgstr "价格变动"
+msgstr "最新价格"
 
 #: dashboard/souq/cms/model_admin/hot_item.py:57
 msgid "Seller Number"
-msgstr "商户名称"
+msgstr "跟卖数"
 
 #: dashboard/souq/cms/model_admin/hot_item.py:67
 #: dashboard/souq/cms/model_admin/item.py:60
