@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'cachalot',
     'ckeditor',
     'rest_framework',
-    'registration',
+    # 'registration',
     # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
