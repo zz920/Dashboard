@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-07 11:16-0700\n"
+"POT-Creation-Date: 2019-05-14 12:52+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,17 +53,42 @@ msgstr "单品分析"
 msgid "Announcement"
 msgstr "公告"
 
-#: dashboard/souq/cms/model_admin/hot_item.py:47
+#: dashboard/souq/cms/model_admin/hot_item.py:48
 msgid "Sales in 5 days"
 msgstr "5日内销量"
 
-#: dashboard/souq/cms/model_admin/hot_item.py:56
-#: dashboard/souq/cms/model_admin/item.py:36
+#: dashboard/souq/cms/model_admin/hot_item.py:53
+msgid "Last Price"
+msgstr "价格变动"
+
+#: dashboard/souq/cms/model_admin/hot_item.py:57
+msgid "Seller Number"
+msgstr "商户名称"
+
+#: dashboard/souq/cms/model_admin/hot_item.py:67
+#: dashboard/souq/cms/model_admin/item.py:60
 #: dashboard/souq/models_content/proxy/single_item.py:13
 msgid "Product Image"
 msgstr "商品图片"
 
-#: dashboard/souq/cms/model_admin/seller.py:25
+#: dashboard/souq/cms/model_admin/item.py:41
+msgid "Seller Count"
+msgstr "跟卖数"
+
+#: dashboard/souq/cms/model_admin/item.py:47
+msgid "Unknown"
+msgstr "未知"
+
+#: dashboard/souq/cms/model_admin/item.py:48
+msgid "Average Price"
+msgstr "均价"
+
+#: dashboard/souq/cms/model_admin/item.py:53
+#: dashboard/souq/models_content/proxy/single_seller.py:20
+msgid "Total Sales"
+msgstr "总销售金额"
+
+#: dashboard/souq/cms/model_admin/seller.py:27
 msgid "Hot Items in last 5 days"
 msgstr "5日内热销产品（按销量排行）"
 
@@ -151,10 +176,6 @@ msgstr "点击在原平台查看"
 msgid "single item"
 msgstr "单品分析"
 
-#: dashboard/souq/models_content/proxy/single_seller.py:20
-msgid "Total Sales"
-msgstr "总销售金额"
-
 #: dashboard/souq/models_content/proxy/single_seller.py:31
 msgid "Related Category"
 msgstr "相关产品目录"
@@ -184,6 +205,61 @@ msgstr "商户"
 msgid "sellers"
 msgstr "商户"
 
+#: dashboard/templates/admin/base.html:60
+msgid "Welcome,"
+msgstr "欢迎,"
+
+#: dashboard/templates/admin/base.html:65
+#: dashboard/templates/admin/base.html:182
+msgid "View site"
+msgstr "查看站点"
+
+#: dashboard/templates/admin/base.html:70
+#: dashboard/templates/admin/base.html:191
+msgid "Documentation"
+msgstr "文档"
+
+#: dashboard/templates/admin/base.html:74
+msgid "Change password"
+msgstr "修改密码"
+
+#: dashboard/templates/admin/base.html:76
+msgid "Log out"
+msgstr "退出"
+
+#: dashboard/templates/admin/base.html:86
+#: dashboard/templates/admin/base.html:174
+msgid "Home"
+msgstr "首页"
+
+#: dashboard/templates/admin/base.html:154
+msgid "back"
+msgstr "返回"
+
+#: dashboard/templates/admin/base.html:235
+msgid "Applications"
+msgstr "应用"
+
+#: dashboard/templates/admin/base.html:259
+msgid "Hide applications"
+msgstr "隐藏应用"
+
+#: dashboard/templates/admin/base.html:260
+msgid "Show hidden"
+msgstr "显示隐藏项"
+
+#: dashboard/templates/admin/base.html:301
+msgid "Search"
+msgstr "查找"
+
+#: dashboard/templates/admin/base.html:306
+msgid "Application page"
+msgstr "应用页"
+
+#: dashboard/templates/admin/base.html:332
+msgid "current theme"
+msgstr "当前主题"
+
 #: dashboard/templates/admin/item_view.html:38
 #: dashboard/templates/admin/single_item_view.html:55
 msgid "Quantity"
@@ -192,7 +268,7 @@ msgstr "库存数量"
 #: dashboard/templates/admin/item_view.html:64
 #: dashboard/templates/admin/single_item_view.html:88
 msgid "Price"
-msgstr "价格变动"
+msgstr "价格"
 
 #: dashboard/templates/admin/item_view.html:82
 #: dashboard/templates/admin/single_item_view.html:112
@@ -209,7 +285,7 @@ msgstr "购物车天数"
 
 #: dashboard/templates/admin/submit_line.html:5
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #: dashboard/templates/admin/submit_line.html:8
 msgid "Delete"
@@ -255,6 +331,16 @@ msgstr "用户"
 msgid "users"
 msgstr "用户"
 
+#: dashboard/user/models_content/user_service.py:17
+#: dashboard/user/models_content/user_service.py:18
+msgid "user collection"
+msgstr "收藏"
+
+#: dashboard/user/models_content/user_service.py:26
+#: dashboard/user/models_content/user_service.py:27
+msgid "user service"
+msgstr "服务"
+
 msgid "Category"
 msgstr "商品目录"
 
@@ -285,36 +371,6 @@ msgstr "应用名称"
 msgid "pinned application"
 msgstr "固定应用"
 
-msgid "Welcome,"
-msgstr "欢迎,"
-
-msgid "View site"
-msgstr "查看站点"
-
-msgid "Documentation"
-msgstr "文档"
-
-msgid "Change password"
-msgstr "修改密码"
-
-msgid "Log out"
-msgstr "退出"
-
-msgid "Home"
-msgstr "首页"
-
-msgid "back"
-msgstr "返回"
-
-msgid "Applications"
-msgstr "应用"
-
-msgid "Hide applications"
-msgstr "隐藏应用"
-
-msgid "Show hidden"
-msgstr "显示隐藏项"
-
 msgid "Add bookmark"
 msgstr "添加书签"
 
@@ -330,12 +386,6 @@ msgstr "你确定要删除这个书签吗？"
 msgid "Remove"
 msgstr "删除"
 
-msgid "Application page"
-msgstr "应用页"
-
-msgid "current theme"
-msgstr "当前主题"
-
 msgid "Add another %(verbose_name)s"
 msgstr "添加另一个%(verbose_name)s"
 
@@ -347,9 +397,6 @@ msgstr "弹窗关闭中..."
 
 msgid " By %(filter_title)s "
 msgstr "By %(filter_title)s"
-
-msgid "Search"
-msgstr "查找"
 
 msgid "Reset"
 msgstr "重置"
@@ -1027,9 +1074,6 @@ msgstr "目前"
 
 msgid "Change"
 msgstr "修改"
-
-msgid "Unknown"
-msgstr "未知"
 
 msgid "Yes"
 msgstr "是"
