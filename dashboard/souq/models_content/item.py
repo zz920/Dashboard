@@ -89,6 +89,9 @@ class Detail(models.Model):
     class Meta:
         indexes = [
             models.Index(fields=['identify']),
+            models.Index(fields=['sales']),
+            models.Index(fields=['created']),
+            models.Index(fields=['price']),
         ]
 
 
