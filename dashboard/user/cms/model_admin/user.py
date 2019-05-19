@@ -5,5 +5,5 @@ from common.cms.model_admin.base import BaseModelAdmin
 from common.cms.mixin.super_only import SuperOnlyMixin
 
 
-class UserModelAdmin(UserAdmin, BaseModelAdmin, SuperOnlyMixin):
+class UserModelAdmin(SuperOnlyMixin, UserAdmin, BaseModelAdmin):
     pass

@@ -54,7 +54,7 @@ class HotItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
 
     def seller_number(self, instance):
         return instance.seller_count
-    seller_number.short_description = _("Seller Number")
+    seller_number.short_description = _("Seller Count")
     seller_number.admin_order_field = 'seller_count'
 
     def get_changelist(self, request, **kwargs):
