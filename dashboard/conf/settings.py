@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_rq',
     'souq',
     'user',
     'main_dashboard',
@@ -175,3 +176,4 @@ EXPIRE_TIME = getenv('EXPIRE_TIME', 36000)
 
 from .database import *
 from .jet import *
+from .queue import *

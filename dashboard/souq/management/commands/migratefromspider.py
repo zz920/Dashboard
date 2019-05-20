@@ -1,8 +1,14 @@
+from django_rq import job
 from django.core.management.base import BaseCommand
 
 from souq.models import Category, Seller, Item, Detail
 from souq.mongo_models import MCategory, MSeller, MItem
 from common.utils.time import timeit
+
+
+@job
+def bulk_create_helper(model, obj_list):
+    model.object.bulk_create(obj_list)
 
 
 class Command(BaseCommand):
@@ -35,6 +41,7 @@ class Command(BaseCommand):
             if getattr(obj, uk) not in uk_set:
                 create_list.append(model(**data))
         if create_list:
+            # bulk_create_helper.delay(model, create_list)
             model.objects.bulk_create(create_list)
         if len(create_list):
             print("{} Objects / {}".format(repr(model), len(create_list)))
@@ -151,5 +158,6 @@ class Command(BaseCommand):
                         )
                         # to avoid the same day scrapy twice
                         detail_cache.add(identify)
-            Detail.objects.bulk_create(create_list)
+            bulk_create_helper.delay(Detail, create_list)
+            # Detail.objects.bulk_create(create_list)
             print("{} Objects / {}".format(repr(Detail), len(create_list)))
