@@ -1,3 +1,5 @@
+import sys
+
 from django_rq import job
 from django.core.management.base import BaseCommand
 
@@ -54,6 +56,7 @@ class Command(BaseCommand):
                 self.cache[obj._id] = tmp_cache[getattr(obj, uk)]
             except:
                 print("{} Object missing: {}".format(obj, uk))
+        print(sys.getsizeof(self.cache))
 
     @timeit
     def migrate_category(self):
@@ -158,6 +161,8 @@ class Command(BaseCommand):
                         )
                         # to avoid the same day scrapy twice
                         detail_cache.add(identify)
-            bulk_create_helper.delay(Detail, create_list)
-            # Detail.objects.bulk_create(create_list)
+            # bulk_create_helper.delay(Detail, create_list)
+            Detail.objects.bulk_create(create_list)
+
+            print(sys.getsizeof(self.cache))
             print("{} Objects / {}".format(repr(Detail), len(create_list)))
