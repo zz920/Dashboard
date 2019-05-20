@@ -39,9 +39,10 @@ class Command(BaseCommand):
         mongo_objs = query()
         unique_key = [getattr(obj, uk) for obj in mongo_objs]
 
-        local_ext = model.objects.filter(**{uk + '__in': unique_key}).values_list('id', uk)
+        local_ext = list(model.objects.filter(**{uk + '__in': unique_key}).values_list('id', uk))
         uk_set = set([u[1] for u in local_ext])
         create_list = []
+        extra_ext = []
 
         for obj in mongo_objs:
             data = {
@@ -52,10 +53,10 @@ class Command(BaseCommand):
                 create_list.append(model(**data))
         if create_list:
             # bulk_create_helper.delay(model, create_list)
-            model.objects.bulk_create(create_list)
+            extra_ext.extend([(obj.id, getattr(obj, uk)) for obj in model.objects.bulk_create(create_list)])
 
         # update cache
-        local_ext = model.objects.filter(**{uk + '__in': unique_key}).values_list('id', uk)
+        local_ext.extend(extra_ext)
         tmp_cache = {d[1]: d[0] for d in local_ext}
         for obj in mongo_objs:
             try:
@@ -144,13 +145,11 @@ class Command(BaseCommand):
 
     @timeit
     def migrate_detail(self):
-        # detail_cache = set(Detail.objects.values_list('identify', flat=True))
+        detail_cache = set([d for d in Detail.objects.values_list('identify', flat=True)])
         total = MCategory.objects.count()
         update_cnt = 0
-        detail_cache = set([])
         for ind, category in enumerate(MCategory.objects.all()):
             create_list = []
-            detail_cache.update(set(Detail.objects.filter(item__category__id=self.cache.get(category._id)).values_list('identify', flat=True)))
             for item in MItem.objects.filter(category=category._id).all():
                 tm = self.cache.get(item._id)
                 if not tm:
