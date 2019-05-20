@@ -13,6 +13,11 @@ def bulk_create_helper(model, obj_list):
     model.object.bulk_create(obj_list)
 
 
+def sys_progress_print(num):
+    sys.stdout.write("\r%d%%" % num)
+    sys.stdout.flush()
+
+
 class Command(BaseCommand):
     help = 'Migrate data from spider db.'
     cache = {}
@@ -45,8 +50,8 @@ class Command(BaseCommand):
         if create_list:
             # bulk_create_helper.delay(model, create_list)
             model.objects.bulk_create(create_list)
-        if len(create_list):
-            print("{} Objects / {}".format(repr(model), len(create_list)))
+        # if len(create_list):
+        #    print("{} Objects / {}".format(repr(model), len(create_list)))
 
         # update cache
         local_ext = model.objects.filter(**{uk + '__in': unique_key}).all()
@@ -56,7 +61,6 @@ class Command(BaseCommand):
                 self.cache[obj._id] = tmp_cache[getattr(obj, uk)]
             except:
                 print("{} Object missing: {}".format(obj, uk))
-        print(sys.getsizeof(self.cache))
 
     @timeit
     def migrate_category(self):
@@ -110,8 +114,10 @@ class Command(BaseCommand):
                     self.migrate_seller()
                 return self.cache[x]
             return x
-
-        for category in MCategory.objects.all():
+        
+        total = MCategory.Objects.count()
+        for ind, category in enumerate(MCategory.objects.all()):
+            print("0%")
             self.common_migration(
                 query=MItem.objects.filter(category=category._id).all,
                 uk='unit_id',
@@ -131,11 +137,14 @@ class Command(BaseCommand):
                 },
                 f=f
             )
+            sys_progress_print(round(ind * 100 // total)) 
 
     @timeit
     def migrate_detail(self):
         detail_cache = set(Detail.objects.values_list('identify', flat=True))
-        for category in MCategory.objects.all():
+        total = MCategory.Objects.count()
+        for ind, category in enumerate(MCategory.objects.all()):
+            print("0%")
             create_list = []
             for item in MItem.objects.filter(category=category._id).all():
                 tm = self.cache.get(item._id)
@@ -163,6 +172,5 @@ class Command(BaseCommand):
                         detail_cache.add(identify)
             # bulk_create_helper.delay(Detail, create_list)
             Detail.objects.bulk_create(create_list)
-
-            print(sys.getsizeof(self.cache))
-            print("{} Objects / {}".format(repr(Detail), len(create_list)))
+            sys_progress_print(round(ind * 100 // total)) 
+            # print("{} Objects / {}".format(repr(Detail), len(create_list)))
