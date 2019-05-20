@@ -144,11 +144,13 @@ class Command(BaseCommand):
 
     @timeit
     def migrate_detail(self):
-        detail_cache = set(Detail.objects.values_list('identify', flat=True))
+        # detail_cache = set(Detail.objects.values_list('identify', flat=True))
         total = MCategory.objects.count()
         update_cnt = 0
+        detail_cache = set([])
         for ind, category in enumerate(MCategory.objects.all()):
             create_list = []
+            detail_cache.update(set(Detail.objects.filter(item__category__id=self.cache.get(category._id)).values_list('identify', flat=True)))
             for item in MItem.objects.filter(category=category._id).all():
                 tm = self.cache.get(item._id)
                 if not tm:
