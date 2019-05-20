@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_rq',
+    'django_rq_dashboard',
     'souq',
     'user',
     'main_dashboard',
