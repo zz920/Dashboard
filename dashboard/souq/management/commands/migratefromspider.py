@@ -159,7 +159,7 @@ class Command(BaseCommand):
                         create_list.append(
                             Detail(
                                 **dict(
-                                    item=tm,
+                                    item_id=tm,
                                     created=detail.created,
                                     price=detail.price,
                                     quantity=detail.quantity,
