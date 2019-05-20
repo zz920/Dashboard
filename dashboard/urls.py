@@ -13,7 +13,6 @@ urlpatterns = [
                     re_path(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
                     # re_path(r'^accounts/', include('registration.backends.default.urls')),
                     path('', admin.site.urls),
-                    path('task-rq/', include('django_rq_dashboard.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 admin.site.site_header = _("Panda Dashboard")
