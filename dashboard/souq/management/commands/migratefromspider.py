@@ -16,7 +16,8 @@ def bulk_create_helper(model, obj_list):
 def sys_progress_print(num, content=''):
     sys.stdout.write("\r%.2f%%-----%s" % (num, content))
     if int(num) % 20 == 0 and num > 1:
-        import ipdb; ipdb.set_trace()
+        #import ipdb; ipdb.set_trace()
+        pass
     sys.stdout.flush()
 
 
