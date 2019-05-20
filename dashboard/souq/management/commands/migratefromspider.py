@@ -13,8 +13,8 @@ def bulk_create_helper(model, obj_list):
     model.object.bulk_create(obj_list)
 
 
-def sys_progress_print(num):
-    sys.stdout.write("\r%.2f%%" % num)
+def sys_progress_print(num, content=''):
+    sys.stdout.write("\r%.2f%%-----%s" % (num, content))
     if int(num) % 20 == 0 and num > 1:
         import ipdb; ipdb.set_trace()
     sys.stdout.flush()
@@ -22,7 +22,6 @@ def sys_progress_print(num):
 
 class Command(BaseCommand):
     help = 'Migrate data from spider db.'
-    # cache = {}
 
     @timeit
     def handle(self, *args, **options):
@@ -53,17 +52,16 @@ class Command(BaseCommand):
         if create_list:
             # bulk_create_helper.delay(model, create_list)
             model.objects.bulk_create(create_list)
-        # if len(create_list):
-        #    print("{} Objects / {}".format(repr(model), len(create_list)))
 
         # update cache
-        local_ext = model.objects.filter(**{uk + '__in': unique_key}).all()
-        tmp_cache = {getattr(d, uk): d for d in local_ext}
+        local_ext = model.objects.filter(**{uk + '__in': unique_key}).values_list('id', uk)
+        tmp_cache = {d[1]: d[0] for d in local_ext}
         for obj in mongo_objs:
             try:
                 self.cache[obj._id] = tmp_cache[getattr(obj, uk)]
             except:
                 print("{} Object missing: {}".format(obj, uk))
+        return len(create_list)
 
     @timeit
     def migrate_category(self):
@@ -72,7 +70,7 @@ class Command(BaseCommand):
                 return x.decode('utf-8', 'ignore')
             return x
 
-        self.common_migration(
+        update_cnt = self.common_migration(
             query=MCategory.objects.all,
             uk='link',
             model=Category,
@@ -83,6 +81,7 @@ class Command(BaseCommand):
             },
             f=f
         )
+        sys_progress_print(100, "{} Object inserted".format(update_cnt))
 
     @timeit
     def migrate_seller(self):
@@ -91,7 +90,7 @@ class Command(BaseCommand):
                 return x.decode('utf-8', 'ignore')
             return x
 
-        self.common_migration(
+        update_cnt = self.common_migration(
             query=MSeller.objects.all,
             uk='link',
             model=Seller,
@@ -101,6 +100,7 @@ class Command(BaseCommand):
             },
             f=f,
         )
+        sys_progress_print(100, "{} Object inserted".format(update_cnt))
 
     @timeit
     def migrate_item(self):
@@ -117,10 +117,10 @@ class Command(BaseCommand):
                     self.migrate_seller()
                 return self.cache[x]
             return x
-        
+
         total = MCategory.objects.count()
         for ind, category in enumerate(MCategory.objects.all()):
-            self.common_migration(
+            update_cnt = self.common_migration(
                 query=MItem.objects.filter(category=category._id).all,
                 uk='unit_id',
                 model=Item,
@@ -129,17 +129,17 @@ class Command(BaseCommand):
                     'name': 'name',
                     'img_link': 'img_link',
                     'plantform': 'plantform',
-                    'category': 'category',
+                    'category_id': 'category',
                     'brand': 'brand',
                     'ean_code': 'ean_code',
                     'trace_id': 'trace_id',
                     'unit_id': 'unit_id',
                     'description': 'description',
-                    'seller': 'seller',
+                    'seller_id': 'seller',
                 },
                 f=f
             )
-            sys_progress_print(float((ind + 1) * 100) / total) 
+            sys_progress_print(float((ind + 1) * 100) / total, "{} Object inserted".format(update_cnt))
 
     @timeit
     def migrate_detail(self):
@@ -173,5 +173,5 @@ class Command(BaseCommand):
                         detail_cache.add(identify)
             # bulk_create_helper.delay(Detail, create_list)
             Detail.objects.bulk_create(create_list)
-            sys_progress_print(float((ind + 1) * 100) / total) 
+            sys_progress_print(float((ind + 1) * 100) / total)
             # print("{} Objects / {}".format(repr(Detail), len(create_list)))
