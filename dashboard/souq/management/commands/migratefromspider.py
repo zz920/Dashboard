@@ -146,7 +146,7 @@ class Command(BaseCommand):
 
     @timeit
     def migrate_detail(self):
-        day_limit = datetime.now() - timedelta(days=3)
+        day_limit = datetime.now() - timedelta(days=5)
         detail_cache = set([d for d in Detail.objects.filter(created__gte=day_limit).values_list('identify', flat=True)])
         total = MCategory.objects.count()
         update_cnt = 0
