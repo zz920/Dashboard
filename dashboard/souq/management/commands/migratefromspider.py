@@ -14,7 +14,7 @@ def bulk_create_helper(model, obj_list):
 
 
 def sys_progress_print(num):
-    sys.stdout.write("\r%d%%" % num)
+    sys.stdout.write("\r%.2f%%" % num)
     sys.stdout.flush()
 
 
@@ -115,9 +115,8 @@ class Command(BaseCommand):
                 return self.cache[x]
             return x
         
-        total = MCategory.Objects.count()
+        total = MCategory.objects.count()
         for ind, category in enumerate(MCategory.objects.all()):
-            print("0%")
             self.common_migration(
                 query=MItem.objects.filter(category=category._id).all,
                 uk='unit_id',
@@ -137,14 +136,13 @@ class Command(BaseCommand):
                 },
                 f=f
             )
-            sys_progress_print(round(ind * 100 // total)) 
+            sys_progress_print(float((ind + 1) * 100) / total) 
 
     @timeit
     def migrate_detail(self):
         detail_cache = set(Detail.objects.values_list('identify', flat=True))
-        total = MCategory.Objects.count()
+        total = MCategory.objects.count()
         for ind, category in enumerate(MCategory.objects.all()):
-            print("0%")
             create_list = []
             for item in MItem.objects.filter(category=category._id).all():
                 tm = self.cache.get(item._id)
@@ -172,5 +170,5 @@ class Command(BaseCommand):
                         detail_cache.add(identify)
             # bulk_create_helper.delay(Detail, create_list)
             Detail.objects.bulk_create(create_list)
-            sys_progress_print(round(ind * 100 // total)) 
+            sys_progress_print(float((ind + 1) * 100) / total) 
             # print("{} Objects / {}".format(repr(Detail), len(create_list)))
