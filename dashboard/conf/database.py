@@ -53,4 +53,3 @@ DATABASES = {
 }
 
 DATABASE_ROUTERS = ('dbrouter.CustomDBRouter', )
-SILENCED_SYSTEM_CHECKS = ['mysql.E001']

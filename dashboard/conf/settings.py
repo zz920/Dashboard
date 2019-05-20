@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+SILENCED_SYSTEM_CHECKS = ["cachalot.E003"]
 INSTALLED_APPS = [
     'jet.dashboard',
     'jet',

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.shortcuts import redirect
 from django.contrib import admin
 from django.utils.safestring import mark_safe
@@ -11,13 +12,14 @@ from common.cms.mixin.view_only import ViewOnlyMixin
 
 class ItemChangeList(ChangeList):
     def get_queryset(self, request, **kwargs):
+        yesterday = datetime.now() - timedelta(1)
         qs = super().get_queryset(request, **kwargs)
         qs = qs.annotate(
                 seller_count=Count('trace_id'), 
                 total_sales=Coalesce(Sum('detail__sales'), Value(0)), 
-                avg_price=Avg('detail__price')
+                price=Max('detail__price', filter=Q(detail__created=yesterday))
         )
-        return qs
+        return qs.order_by('name')
 
 
 class ItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
