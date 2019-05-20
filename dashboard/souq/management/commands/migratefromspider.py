@@ -118,10 +118,10 @@ class Command(BaseCommand):
                     self.migrate_seller()
                 return self.cache[x]
             return x
-
+        update_cnt = 0
         total = MCategory.objects.count()
         for ind, category in enumerate(MCategory.objects.all()):
-            update_cnt = self.common_migration(
+            update_cnt += self.common_migration(
                 query=MItem.objects.filter(category=category._id).all,
                 uk='unit_id',
                 model=Item,
@@ -146,6 +146,7 @@ class Command(BaseCommand):
     def migrate_detail(self):
         detail_cache = set(Detail.objects.values_list('identify', flat=True))
         total = MCategory.objects.count()
+        update_cnt = 0
         for ind, category in enumerate(MCategory.objects.all()):
             create_list = []
             for item in MItem.objects.filter(category=category._id).all():
@@ -174,5 +175,6 @@ class Command(BaseCommand):
                         detail_cache.add(identify)
             # bulk_create_helper.delay(Detail, create_list)
             Detail.objects.bulk_create(create_list)
-            sys_progress_print(float((ind + 1) * 100) / total)
+            update_cnt += len(create_list)
+            sys_progress_print(float((ind + 1) * 100) / total, "{} Object inserted".format(update_cnt))
             # print("{} Objects / {}".format(repr(Detail), len(create_list)))
