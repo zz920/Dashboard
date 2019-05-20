@@ -1,5 +1,6 @@
 import sys
 
+from datetime import datetime, timedelta
 from django_rq import job
 from django.core.management.base import BaseCommand
 
@@ -145,7 +146,8 @@ class Command(BaseCommand):
 
     @timeit
     def migrate_detail(self):
-        detail_cache = set([d for d in Detail.objects.values_list('identify', flat=True)])
+        day_limit = datetime.now() - timedelta(days=3)
+        detail_cache = set([d for d in Detail.objects.filter(created__gte=day_limit).values_list('identify', flat=True)])
         total = MCategory.objects.count()
         update_cnt = 0
         for ind, category in enumerate(MCategory.objects.all()):
