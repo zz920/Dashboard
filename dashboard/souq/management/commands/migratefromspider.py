@@ -124,6 +124,7 @@ class Command(BaseCommand):
 
     @timeit
     def migrate_detail(self):
+        detail_cache = set(Detail.objects.values_list('identify', flat=True))
         for category in MCategory.objects.all():
             create_list = []
             for item in MItem.objects.filter(category=category._id).all():
@@ -134,18 +135,21 @@ class Command(BaseCommand):
 
                 for detail in item.detail:
                     identify = "{}_{}".format(detail.created, item._id)
-                    create_list.append(
-                        Detail(
-                            **dict(
-                                item=tm,
-                                created=detail.created,
-                                price=detail.price,
-                                quantity=detail.quantity,
-                                buybox=detail.buybox,
-                                sales=detail.sales,
-                                identify=identify,
+                    if identify not in detail_cache:
+                        create_list.append(
+                            Detail(
+                                **dict(
+                                    item=tm,
+                                    created=detail.created,
+                                    price=detail.price,
+                                    quantity=detail.quantity,
+                                    buybox=detail.buybox,
+                                    sales=detail.sales,
+                                    identify=identify,
+                                )
                             )
                         )
-                    )
-            Detail.objects.bulk_create(create_list, ignore_conflicts=True)
+                        # to avoid the same day scrapy twice
+                        detail_cache.add(identify)
+            Detail.objects.bulk_create(create_list)
             print("{} Objects / {}".format(repr(Detail), len(create_list)))
