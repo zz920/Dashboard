@@ -15,15 +15,18 @@ def bulk_create_helper(model, obj_list):
 
 def sys_progress_print(num):
     sys.stdout.write("\r%.2f%%" % num)
+    if int(num) % 20 == 0 and num > 1:
+        import ipdb; ipdb.set_trace()
     sys.stdout.flush()
 
 
 class Command(BaseCommand):
     help = 'Migrate data from spider db.'
-    cache = {}
+    # cache = {}
 
     @timeit
     def handle(self, *args, **options):
+        self.cache = {}
         self.migrate_category()
         self.migrate_seller()
         self.migrate_item()
