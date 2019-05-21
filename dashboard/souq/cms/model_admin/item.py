@@ -23,12 +23,19 @@ class ItemChangeList(ChangeList):
                 souq_item.plantform,
                 souq_item.brand,
                 souq_item.ean_code,
-                souq_item.trace_id,
+                distinct souq_item.trace_id,
                 souq_item.unit_id,
                 souq_item.description,
                 souq_item.category_id,
                 souq_item.seller_id
-            FROM souq_item GROUP BY souq_item.trace_id
+            FROM souq_item as t0
+            RIGHT JOIN (
+                SELECT
+                    trace_id,
+                    count(*) as seller_count
+                FROM souq_item
+                GROUP BY trace_id
+            ) t1 ON t0.trace_id=t1.trace_id
         """)
         return qs
 
