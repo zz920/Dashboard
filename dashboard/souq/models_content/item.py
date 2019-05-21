@@ -6,6 +6,7 @@ from souq.models_content.seller import Seller
 from souq.models_content.category import Category
 
 from django.utils.translation import gettext_lazy as _
+from django.contrib.postgres.indexes import HashIndex
 
 
 class Item(models.Model):
@@ -34,8 +35,8 @@ class Item(models.Model):
             models.Index(fields=['link']),
             models.Index(fields=['ean_code']),
             models.Index(fields=['name']),
-            models.Index(fields=['unit_id']),
-            models.Index(fields=['trace_id']),
+            HashIndex(fields=['unit_id']),
+            HashIndex(fields=['trace_id']),
         ]
         verbose_name = _('item')
         verbose_name_plural = _('items')
