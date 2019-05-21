@@ -13,7 +13,8 @@ from souq.models import Item
 
 class ItemChangeList(ChangeList):
     def get_queryset(self, request, **kwargs):
-        qs = super().get_queryset(request, **kwargs)
+        limit = 10
+        offset = 10 * int(request.GET.get('p', '0'))
         qs = Item.objects.raw("""
             SELECT
                 *
@@ -24,8 +25,8 @@ class ItemChangeList(ChangeList):
                     count(*) as seller_count
                 FROM souq_item
                 GROUP BY trace_id
-            ) t1 ON souq_item.trace_id=t1.trace_id
-        """)
+            ) t1 ON souq_item.trace_id=t1.trace_id offset {} limit {}
+        """.format(offset, limit))
         return qs
 
 
@@ -38,6 +39,10 @@ class ItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
     view_on_site = True
 
     change_form_template = 'admin/item_view.html'
+
+    def get_paginator(self, request, queryset, per_page, orphans=0, allow_empty_first_page=True):
+        dummy_queryset = Item.objects
+        return self.paginator(dummy_queryset, per_page, orphans, allow_empty_first_page)
 
     def get_changelist(self, request, **kwargs):
         return ItemChangeList
