@@ -16,26 +16,15 @@ class ItemChangeList(ChangeList):
         qs = super().get_queryset(request, **kwargs)
         qs = Item.objects.raw("""
             SELECT
-                t0.id,
-                t0.name,
-                t0.img_link,
-                t0.link,
-                t0.plantform,
-                t0.trace_id,
-                t0.brand,
-                t0.ean_code,
-                t0.unit_id,
-                t0.description,
-                t0.category_id,
-                t0.seller_id
-            FROM souq_item as t0
-            RIGHT JOIN (
+                *
+            FROM souq_item
+            JOIN (
                 SELECT
                     trace_id,
                     count(*) as seller_count
                 FROM souq_item
                 GROUP BY trace_id
-            ) t1 ON t0.trace_id=t1.trace_id
+            ) t1 ON souq_item.trace_id=t1.trace_id
         """)
         return qs
 
