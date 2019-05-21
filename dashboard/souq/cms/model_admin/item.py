@@ -12,12 +12,10 @@ from common.cms.mixin.view_only import ViewOnlyMixin
 
 class ItemChangeList(ChangeList):
     def get_queryset(self, request, **kwargs):
-        yesterday = datetime.now() - timedelta(1)
         qs = super().get_queryset(request, **kwargs)
         qs = qs.annotate(
                 seller_count=Count('trace_id'), 
                 total_sales=Coalesce(Sum('detail__sales'), Value(0)), 
-                price=Max('detail__price', filter=Q(detail__created=yesterday))
         )
         return qs.order_by('name')
 
@@ -44,9 +42,10 @@ class ItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
     seller_count.admin_order_field = 'seller_count'
 
     def price(self, instance):
-        if instance.avg_price:
-            return '%.2f' % instance.avg_price 
-        return _('Unknown')
+        try:
+            return '%.2f' % instance.detail_set.first().price
+        except:
+            return _('Unknown')
     price.short_description = _("Average Price")
     price.admin_order_field = 'avg_price'
 
