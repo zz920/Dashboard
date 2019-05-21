@@ -30,9 +30,14 @@ class ItemPaginator(Paginator):
 
 
 class ItemChangeList(ChangeList):
+
+    list_display = ('product_img', 'name', 'price', 'seller_count', 'total_sales', 'ean_code', 'plantform', 'brand')
+
     def get_queryset(self, request, **kwargs):
         limit = 10
         offset = 10 * int(request.GET.get('p', '0'))
+        order_by = ["souq_item." + self.list_display[int(f)] for f in request.GET.get('o', '').split('.')]
+        order_query = ','.join(order_by or 'name')
         qs = Item.objects.raw("""
             SELECT
                 *
@@ -43,8 +48,10 @@ class ItemChangeList(ChangeList):
                     count(*) as seller_count
                 FROM souq_item
                 GROUP BY trace_id
-            ) t1 ON souq_item.trace_id=t1.trace_id offset {} limit {}
-        """.format(offset, limit))
+            ) t1 ON souq_item.trace_id=t1.trace_id
+            OFFSET {} LIMIT {}
+            ORDER BY {}
+        """.format(offset, limit, order_query))
         return qs
 
 
@@ -63,7 +70,7 @@ class ItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
         return ItemChangeList
 
     def get_sortable_by(self, request):
-        return {'name', 'seller_count', 'total_sales'}
+        return {'name', 'seller_count'}
 
     def seller_count(self, instance):
         return instance.seller_count
@@ -79,7 +86,7 @@ class ItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
     price.admin_order_field = 'avg_price'
 
     def total_sales(self, instance):
-        return instance.total_sales
+        return instance.aggregate(Sum('detail__sales'))
     total_sales.short_description = _('Total Sales')
     total_sales.admin_order_field = 'total_sales'
 
