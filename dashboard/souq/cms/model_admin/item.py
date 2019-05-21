@@ -6,9 +6,27 @@ from django.db.models import Max, Sum, Q, F, Value, Count, Avg
 from django.db.models.functions import Coalesce
 from django.contrib.admin.views.main import ChangeList
 from django.utils.translation import gettext_lazy as _
+from django.core.paginator import Paginator
+from django.utils.functional import cached_property
 
 from common.cms.mixin.view_only import ViewOnlyMixin
 from souq.models import Item
+
+
+class ItemPaginator(Paginator):
+
+    def page(self, number):
+        """Return a Page object for the given 1-based page number."""
+        number = self.validate_number(number)
+        return self._get_page(self.object_list, number, self)
+
+    @cached_property
+    def count(self):
+        """Return the total number of objects, across all pages."""
+        return Item.objects.count()
+
+    def _check_object_list_is_ordered(self):
+        pass
 
 
 class ItemChangeList(ChangeList):
@@ -38,11 +56,8 @@ class ItemProxyAdmin(ViewOnlyMixin, admin.ModelAdmin):
     list_per_page = 10
     view_on_site = True
 
+    paginator = ItemPaginator
     change_form_template = 'admin/item_view.html'
-
-    def get_paginator(self, request, queryset, per_page, orphans=0, allow_empty_first_page=True):
-        dummy_queryset = Item.objects
-        return self.paginator(dummy_queryset, per_page, orphans, allow_empty_first_page)
 
     def get_changelist(self, request, **kwargs):
         return ItemChangeList
