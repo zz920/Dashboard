@@ -36,7 +36,7 @@ class ItemChangeList(ChangeList):
     def get_queryset(self, request, **kwargs):
         limit = 10
         offset = 10 * int(request.GET.get('p', '0'))
-        order_by = ["souq_item." + self.list_display[int(f)] for f in request.GET.get('o', '').split('.')]
+        order_by = ["souq_item." + self.list_display[int(f)] for f in request.GET.get('o', '').split('.') if f]
         order_query = ','.join(order_by or 'name')
         qs = Item.objects.raw("""
             SELECT
