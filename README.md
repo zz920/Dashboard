@@ -1,8 +1,3 @@
 # Dashboard
 
-# Features
-
-## User Module
-1. User registration
-2. User login/logout
-3. User roles define
+As the souq already intergrated with Amazon system, the spider will not work anymore, So I make this project to open-source. just for sharing.
